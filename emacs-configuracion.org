@@ -1,0 +1,449 @@
+#+title: intro-curso-emacs
+#+author: Patricio Martínez
+#+email: maxxcan@argonauta
+#+date: <2019-09-14 sáb>
+
+* Introducción
+
+* Añadiendo el repositorio melpa
+Primero vamos a añadir los repositorios melpa. La solución es simplemente yendo a su [[https://melpa.org/#/][web]]. 
+
+Ahí nos indican que añadamos lo siguiente en nuestro fichero *.emacs* 
+
+#+name: repo-melpa
+#+BEGIN_SRC emacs-lisp :noweb yes
+(require 'package)
+(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
+                    (not (gnutls-available-p))))
+       (proto (if no-ssl "http" "https")))
+  (when no-ssl
+    (warn "\
+Your version of Emacs does not support SSL connections,
+which is unsafe because it allows man-in-the-middle attacks.
+There are two things you can do about this warning:
+1. Install an Emacs version that does support SSL and be safe.
+2. Remove this warning from your init file so you won't see it again."))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
+  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (when (< emacs-major-version 24)
+    ;; For important compatibility libraries like cl-lib
+    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+#+END_SRC
+
+
+* Instalando los paquetes necesarios
+
+Para instalar de forma automática los paquetes que necesitemos añadiremos el siguiente script: 
+
+#+name: instalar-paquetes
+#+BEGIN_SRC emacs-lisp
+;; mi lista de paquetes
+(setq my-packages-list '(autopair
+company
+counsel
+ivy
+org-bullets
+smex
+circadian))
+
+;; comprobar la lista de paquetes
+(unless package-archive-contents
+(package-refresh-contents))
+
+;; instalar
+(dolist (i-package my-packages-list)
+(unless(package-installed-p i-package)
+(package-install i-package)))
+#+END_SRC
+
+* Configurando cosas
+** Autopair y company 
+
+ Vamos a instalar dos paquetes muy intersantes para escribir código. El *autopair* que sirve para que nos termine paréntesis, llaves, etc, y el paqute *company* para el autocompletado. Podemos ir primeramente a las webs de [[https://github.com/joaotavora/autopair][autopair]] y [[https://company-mode.github.io/][company]]. 
+
+ Para instalarlos: 
+
+ #+BEGIN_SRC emacs-lisp
+ package-install autopair
+ package-install company
+ #+END_SRC
+
+ Luego lo configuremos escribiendo en nuestro fichero .emacs los siguiente:
+
+ #+name: autopair-company :noweb yes
+ #+BEGIN_SRC emacs-lisp 
+ (require 'autopair)
+ (autopair-global-mode)
+
+
+ (add-hook 'after-init-hook 'global-company-mode)
+ #+END_SRC
+
+** Ivy y otras cosas 
+
+ Ahora vamos a instalar una serie de paquetes que nos van a hacer la vida más fácil a la hora de trabajar con Emacs. 
+
+ Por un lado tenemos a  [[https://oremacs.com/swiper/][Ivy]]. Ivy es un sistema que autocompletado en diversos contextos como son menús, en el mini-buffer, código, etc. Lo mejor es verlo funcionar y ver como nos ayuda mucho a trabajar con Emacs. 
+
+ Al mismo tiempo que *Ivy* vamos a instalar dos paquetes más que son *swiper y counsel*. Ambos ayudan mucho al trabajo con Emacs. Swiper ayuda a la búsqueda de texto dentro de un fichero y counsel ayuda a la búsqueda de comandos dentro del mini-buffer.  
+
+ #+name: ivy
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (setq ivy-use-virtual-buffers t)
+ (setq ivy-count-format "(%d/%d) ")
+ 
+ (global-set-key (kbd "C-s") 'swiper)
+ (global-set-key (kbd "M-x") 'counsel-M-x)
+ (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+ (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+ (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+ (global-set-key (kbd "<f1> l") 'counsel-find-library)
+ (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+ (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+
+ #+END_SRC
+
+ Además para que nos sugiran los comandos que más usamos instalamos el paquete *smex*
+
+** Poniendo bonito a Org
+
+ Org mode es una de las mejores maravillas que tiene Emacs. Se le suele llamar una skill app dentro de Emacs. Darían muchos documentos para explicar todo lo que se puede hacer con org-mode pero al menos para empezar podemos hacer que sea agradable a la vista y más cómodo de usar. Para ellos nos basaremos en un artículo de *Howard Abrams* llamado *org-mode como un procesador de texto* que podemos encontrar [[http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html][aquí]]. 
+
+ De ese artículo podemos sacar la siguiente configuración: 
+
+ + Para que cuando usemos * / o _ para resaltar texto, estos símbolos no aparezcan:
+
+ #+name: org-hide-emphansis 
+ #+BEGIN_SRC emacs-lisp :noweb yes
+
+ (setq org-hide-emphasis-markers t)
+
+ #+END_SRC 
+
+ + Para mejorar los bullets y que sean más bonitos.
+
+ #+name: bullets-format
+ #+begin_src emacs-lisp :noweb yes
+ (font-lock-add-keywords 'org-mode
+                         '(("^ +\\([-*]\\) "
+                            (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+ #+end_src 
+
+  ** Mejorar aún más los bullets y lo haremos instalando primero el paquete *org-bullets*
+
+ #+name:  bullets
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (require 'org-bullets)
+ (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+ #+END_SRC 
+
+ + Mejorando las cabeceras  
+
+ Finalmente podemos mejorar el aspecto de las cabeceras de capítulos y secciones para que tengan diferentes tamaños. 
+
+ #+name:  cabeceras
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (let* ((variable-tuple (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+                              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+                              ((x-list-fonts "Verdana")         '(:font "Verdana"))
+                              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+                              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+	(base-font-color     (face-foreground 'default nil 'default))
+	(headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+   (custom-theme-set-faces 'user
+                           `(org-level-8 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-7 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-6 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-5 ((t (,@headline ,@variable-tuple))))
+                           `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
+                           `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
+                           `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil
+ #+END_SRC 
+
+ + Finalmente haremos que cuando se visualice un fichero con extensión .org éste se adapte a la ventana y cuando la línea llegue al final de ésta
+ haga un salto de carro. Para ellos añadiremos la línea 
+
+ #+name: visual-line
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (add-hook 'org-mode-hook 'visual-line-mode)
+ #+END_SRC
+
+
+ Para activar el autocompletado en org instalaremos el paquete *org-ac* y añadiremos la siguiente configuración: 
+
+ #+name:  autocompletado
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (require 'org-ac)
+ (org-ac/config-default)
+ #+END_SRC
+
+** Añadiendo número de líneas 
+
+ En emacs tenemos mucha información en el mini-buffer como el nombre del archivo, el modo en el que está, los modos menores y la línea en la que estamos, pero hay que reconocer que muchas veces es más cómodo tener los números de línea a la izquierda del documento, junto a las líneas del documento. Para ello tenemos el paquete *nlinum* 
+
+ Así que tendremos que instalarlo y añadirlo a nuestra configuración. 
+
+ #+name: nlinum
+ #+BEGIN_SRC emacs-lisp :noweb yes
+ (global-set-key (kbd "<f8>") #'nlinum-mode)
+ #+END_SRC
+
+ Con ese código cuando pulsemos la tecla f8 aparecerán los números al lado de las líneas.
+
+* Configurando Emacs para trabajar con ESS 
+
+Para trabajar con ESS lo primero que vamos a hacer es elegir  es cómo se va a subdividir nuestro buffer. Lo vamos a hacer de forma que se parezca algo al programa Rstudio para las personas que ya lo han usado con anterioridad. 
+
+Una vez que hemos instalado los paquetes  ess-R-data-view, ess-smart-equals y ess-smart-underscore, vamos a añadir la siguiente configuración. 
+
+#+name:  ess
+#+BEGIN_SRC emacs-lisp :noweb yes
+(setq display-buffer-alist
+      `(("*R Dired"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . right)
+         (slot . -1)
+         (window-width . 0.33)
+         (reusable-frames . nil))
+        ("*R"
+         (display-buffer-reuse-window display-buffer-at-bottom)
+         (window-width . 0.5)
+         (reusable-frames . nil))
+        ("*Help"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . right)
+         (slot . 1)
+         (window-width . 0.33)
+         (reusable-frames . nil))))
+#+END_SRC
+
+Ahora vamos a hacer que *markdown* funcione bien con Emacs. Para ellos instalaremos los paquetes *markdown-mode* y *markdown-mode+* y añadiremos lo siguiente: 
+
+#+name:  markdown 
+#+BEGIN_SRC emacs-lisp :noweb yes
+(require 'markdown-mode)
+;;; Markdown mode
+(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
+(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.ronn?" . markdown-mode) auto-mode-alist))
+
+(require 'poly-R)
+(require 'poly-markdown)
+
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown+r-mode))
+
+#+END_SRC
+
+* Configurando Emacs para programar en Fortran
+
+Emacs ya está de por sí muy preparado para trabajar con ficheros en fortran y compilarlos. Pero vamos a añadir algunas cosas para mejorar aún más la experiencia. Esta configuracion la conseguí de esta [[https://gist.github.com/aradi/68a4ff8430a735de13f13393213f0ea8][web]]. 
+
+#+name:  fortran
+#+BEGIN_SRC emacs-lisp :noweb yes
+;; Fortran settings
+(setq fortran-continuation-string "&")
+(setq fortran-do-indent 2)
+(setq fortran-if-indent 2)
+(setq fortran-structure-indent 2)
+
+;; Fortran 90 settings
+(setq f90-do-indent 2)
+(setq f90-if-indent 2)
+(setq f90-type-indent 2)
+(setq f90-program-indent 2)
+(setq f90-continuation-indent 4)
+(setq f90-smart-end 'blink)
+
+;; Set Fortran and Fortran 90 mode for appropriate extensions
+(setq auto-mode-alist
+      (cons '("\\.F90$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.pf$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
+(setq auto-mode-alist
+      (cons '("\\.F$" . fortran-mode) auto-mode-alist))
+
+;; Swap Return and C-j in Fortran 90 mode
+(add-hook 'f90-mode-hook
+	  '(lambda ()
+	     (define-key f90-mode-map [return] 'f90-indent-new-line)
+	     (define-key f90-mode-map "\C-j" 'newline)
+	     (setq fill-column 100)
+         (abbrev-mode)
+         (setq-default indent-tabs-mode nil)
+         (setq whitespace-line-column 100)
+         (setq whitespace-style '(face tabs lines-tail empty))
+         (whitespace-mode)		 
+;;         (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+	     )
+	  )
+
+;; Read in handy abbreviations for Fortran
+(quietly-read-abbrev-file "~/.emacs_abbrevs")
+#+END_SRC
+
+Como vemos ahi necesitamos un fichero .emacs_abbrevs, éste lo crearemos con el siguiente código. 
+
+#+name:  fortran-abbrevs
+#+BEGIN_SRC emacs-lisp :tangle .emacs_abbrevs :noweb yes :padline no :results silent
+;;
+;; Store this file as ~/.emacs_abbrevs
+;;
+
+(define-abbrev-table 'f90-mode-abbrev-table '(
+    ("im$" "implicit none" nil 0)
+    ("po$" "pointer" nil 1)
+    ("wr$" "write" nil 0)
+    ("pm$" "program" nil 0)
+    ("al$" "allocate" nil 0)
+    ("bd$" "block data" nil 0)
+    ("if$" "interface" nil 0)
+    ("pv$" "private" nil 0)
+    ("op$" "optional" nil 0)
+    ("ba$" "backspace" nil 0)
+    ("nu$" "nullify" nil 0)
+    ("wh$" "where" nil 0)
+    ("pa$" "parameter" nil 0)
+    ("elw$" "elsewhere" nil 0)
+    ("ab$" "allocatable" nil 0)
+    ("fu$" "function" nil 0)
+    ("ey$" "entry" nil 0)
+    ("ex$" "external" nil 0)
+    ("fo$" "format" nil 0)
+    ("fl$" "forall" nil 0)
+    ("mo$" "module" nil 1)
+    ("tr$" ".true." nil 0)
+    ("eq$" "equivalence" nil 0)
+    ("eli$" "else if" nil 0)
+    ("dw$" "do while" nil 0)
+    ("sub$" "subroutine" nil 0)
+    ("na$" "namelist" nil 0)
+    ("el$" "else" nil 0)
+    ("lo$" "logical" nil 0)
+    ("sq$" "sequence" nil 0)
+    ("cy$" "cycle" nil 0)
+    ("fa$" ".false." nil 0)
+    ("rw$" "rewind" nil 0)
+    ("cx$" "complex" nil 0)
+    ("rt$" "return" nil 0)
+    ("t$" "type" nil 0)
+    ("ta$" "target" nil 0)
+    ("r$" "real" nil 0)
+    ("di$" "dimension" nil 0)
+    ("se$" "select" nil 0)
+    ("cn$" "contains" nil 0)
+    ("df$" "define" nil 0)
+    ("cm$" "common" nil 0)
+    ("de$" "deallocate" nil 0)
+    ("cl$" "close" nil 0)
+    ("i$" "integer" nil 0)
+    ("in$" "intent" nil 0)
+    ("ini$" "intent(in)" nil 0)
+    ("ino$" "intent(out)" nil 0)
+    ("inio$" "intent(inout)" nil 0)
+    ("pu$" "public" nil 0)
+    ("rc$" "recursive" nil 0)
+    ("pr$" "print" nil 0)
+    ("c$" "character" nil 0)
+    ("as$" "assignment" nil 0)
+    ("mp$" "module procedure" nil 0)
+    ("ps$" "present" nil 0)
+    ("wrs$" "write(*,*)" nil 0)
+    ("prs$" "print *," nil 0)
+    ("rwp$" "real(wp)" nil 0)
+    ("cdp$" "complex(dp)" nil 0)
+    ("pn$" "=> null()" nil 0)
+    ("p$" "procedure" nil 0)
+    ))
+#+END_SRC
+
+* Configurando Eshell
+
+Dentro de Emacs podemos abrir una terminal con bash, zsh, etc, pero además tiene su propia línea de comandos programado en *elisp*, la llamada *eshell*. 
+
+Para configurarla mejor y añadirle color añadiremos la siguiente configuración. 
+
+#+name: eshell
+#+BEGIN_SRC emacs-lisp :noweb yes
+;;; eshell ;;;;;;;;;;;;;;,
+
+(eval-after-load "em-ls"
+    '(progn
+       (defun ted-eshell-ls-find-file-at-point (point)
+         "RET on Eshell's `ls' output to open files."
+         (interactive "d")
+         (find-file (buffer-substring-no-properties
+                     (previous-single-property-change point 'help-echo)
+                     (next-single-property-change point 'help-echo))))
+
+       (defun pat-eshell-ls-find-file-at-mouse-click (event)
+         "Middle click on Eshell's `ls' output to open files.
+ From Patrick Anderson via the wiki."
+         (interactive "e")
+         (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
+
+       (let ((map (make-sparse-keymap)))
+         (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
+         (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
+         (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
+         (defvar ted-eshell-ls-keymap map))
+
+       (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
+         "Eshell's `ls' now lets you click or RET on file names to open them."
+         (add-text-properties 0 (length ad-return-value)
+                              (list 'help-echo "RET, mouse-2: visit this file"
+                                    'mouse-face 'highlight
+                                    'keymap ted-eshell-ls-keymap)
+                              ad-return-value)
+         ad-return-value)))
+
+
+(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
+#+END_SRC
+
+* Cambiando el tema según la hora del día
+
+Para finalizar podemos hacer una cosa muy interesante y es cambiar el tema de todos los que podemos instalar a Emacs para adaptarlo a la hora del día. Esto es para poner temas claros por el día pero oscuros por la noche para descansar los ojos. Para hacer esto usaremos el paquete *circadian*. 
+
+Una vez hecho esto añadiremos la siguiente configuracióń usando dos temas que ya vienen por defecto instalados en Emacs. 
+
+#+name:  circadian
+#+BEGIN_SRC emacs-lisp :noweb yes
+;;circadian package
+;; install the circadian package
+(setq calendar-latitude 37.992241)
+(setq calendar-longitude -1.130654)
+(setq circadian-themes '((:sunrise . adwaita)
+			 (:sunset . misterioso)))
+(circadian-setup)
+#+END_SRC
+
+* Juntando todo el código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/init :noweb yes :padline no :results silent
+<<repo-melpa>>
+<<instalar-paquetes>>
+<<autopair-company>>
+<<ivy>>
+<<org-hide-emphasis>>
+<<bullets-format>>
+<<bullets>>
+<<autocompletado>>
+<<nlinum>>
+<<eshell>>
+<<circadian>>
+#+END_SRC
+
+* Exportando 
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
