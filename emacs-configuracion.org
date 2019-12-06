@@ -5,10 +5,18 @@
 
 * Introducción
 
+* Creando el directorio de configuración de Emacs
+
+#+begin_src emacs-lisp :results silent
+(make-directory "~/.config/emacs/config")
+#+end_src
+
+#+RESULTS:
+
 * Añadiendo el repositorio melpa
 Primero vamos a añadir los repositorios melpa. La solución es simplemente yendo a su [[https://melpa.org/#/][web]]. 
 
-Ahí nos indican que añadamos lo siguiente en nuestro fichero *.emacs* 
+Ahí nos indican que añadamos lo siguiente en nuestro fichero *emacs* 
 
 #+name: repo-melpa
 #+BEGIN_SRC emacs-lisp :noweb yes
@@ -32,7 +40,6 @@ There are two things you can do about this warning:
 (package-initialize)
 #+END_SRC
 
-
 * Instalando los paquetes necesarios
 
 Para instalar de forma automática los paquetes que necesitemos añadiremos el siguiente script: 
@@ -44,8 +51,11 @@ Para instalar de forma automática los paquetes que necesitemos añadiremos el s
 company
 counsel
 ivy
+org-ac
 org-bullets
 smex
+paradox
+magit
 circadian))
 
 ;; comprobar la lista de paquetes
@@ -72,8 +82,8 @@ circadian))
 
  Luego lo configuremos escribiendo en nuestro fichero .emacs los siguiente:
 
- #+name: autopair-company :noweb yes
- #+BEGIN_SRC emacs-lisp 
+ #+name: autopair-company
+ #+BEGIN_SRC emacs-lisp :noweb yes
  (require 'autopair)
  (autopair-global-mode)
 
@@ -106,6 +116,16 @@ circadian))
  #+END_SRC
 
  Además para que nos sugiran los comandos que más usamos instalamos el paquete *smex*
+
+** Poniendo bonito a Emacs
+Vamos a quitarle la barra de los iconos y la del scroll
+
+#+name: emacs-bonito
+#+BEGIN_SRC emacs-lisp :noweb yes
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(setq inhibit-startup-screen t)
+#+END_SRC
 
 ** Poniendo bonito a Org
 
@@ -190,8 +210,16 @@ circadian))
 
  #+name: nlinum
  #+BEGIN_SRC emacs-lisp :noweb yes
- (global-set-key (kbd "<f8>") #'nlinum-mode)
+ (global-set-key (kbd "<f9>") #'nlinum-mode)
  #+END_SRC
+
+Y también podemos usar el paquete neotree para que pulsando una tecla nos aparezca un árbol de directorios y ficheros. 
+
+#+name: neotree
+#+BEGIN_SRC emacs-lisp :noweb yes
+(global-set-key (kdb "<f8>") #'neotree-toggle)
+#+END_SRC
+
 
  Con ese código cuando pulsemos la tecla f8 aparecerán los números al lado de las líneas.
 
@@ -292,7 +320,7 @@ Emacs ya está de por sí muy preparado para trabajar con ficheros en fortran y 
 
 Como vemos ahi necesitamos un fichero .emacs_abbrevs, éste lo crearemos con el siguiente código. 
 
-#+name:  fortran-abbrevs
+
 #+BEGIN_SRC emacs-lisp :tangle .emacs_abbrevs :noweb yes :padline no :results silent
 ;;
 ;; Store this file as ~/.emacs_abbrevs
@@ -426,6 +454,84 @@ Una vez hecho esto añadiremos la siguiente configuracióń usando dos temas que
 (circadian-setup)
 #+END_SRC
 
+* Haciendo que Emacs coja la configuración de ficheros aparte del init
+Vamos a hacer que podamos crear ficheros con configuraciones concretas y no tengamos que meterlas
+en el init sino que iran en un subdirectorio llamado config. Cada fichero será para configurar una cosa
+
+
+
+#+name: configuracion-externa
+#+BEGIN_SRC emacs-lisp
+(load "~/config/emacs/config/load-directory")
+
+(load-directory "~/.config/emacs/config")
+
+#+END_SRC
+
+** Escribiendo el fichero que tenemos que tener en el directorio config para que lea todos los ficheros de configuración en ese directorio
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/load-directory :noweb yes :padline no :results silent
+(defun load-directory (directory)
+  "Load recursively all `.el' files in DIRECTORY."
+  (dolist (element (directory-files-and-attributes directory nil nil nil))
+    (let* ((path (car element))
+           (fullpath (concat directory "/" path))
+           (isdir (car (cdr element)))
+           (ignore-dir (or (string= path ".") (string= path ".."))))
+      (cond
+       ((and (eq isdir t) (not ignore-dir))
+        (load-directory fullpath))
+       ((and (eq isdir nil) (string= (substring path -3) ".el"))
+        (load (file-name-sans-extension fullpath)))))))
+
+#+END_SRC
+
+* Mejorando la presentación de inicio
+Vamos a crear un fichero de configuación llamado dashoard para configurar el paquete en cuestión que es un paquete que coge el inicio de spacemacs y permite usarlo en cualquier configuración de Emacs. 
+
+#+name: dashboard
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/dashboard.el :noweb yes :padline no :results silent
+(require 'dashboard)
+(dashboard-setup-startup-hook)
+
+;; Set the title
+(setq dashboard-banner-logo-title "Bienvenido al mejor Editor del Mundo -- Emacs --")
+
+
+(setq dashboard-startup-banner 'logo)
+;; Value can be
+;; 'official which displays the official emacs logo
+;; 'logo which displays an alternative emacs logo
+;; 1, 2 or 3 which displays one of the text banners
+;; "path/to/your/image.png" which displays whatever image you would prefer
+
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content nil)
+
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-show-shortcuts nil)
+
+;;To customize which widgets are displayed, you can use the following snippet
+
+(setq dashboard-items '((recents  . 5)
+                        (projects . 5)
+                        (agenda . 5)))
+
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+
+(dashboard-modify-heading-icons '((recents . "file-text")
+                                  (bookmarks . "book")))
+
+(setq dashboard-set-init-info t)
+
+
+(add-to-list 'dashboard-items '(agenda) t)
+
+(setq show-week-agenda-p t)
+
+#+END_SRC
+
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/init :noweb yes :padline no :results silent
@@ -433,13 +539,16 @@ Una vez hecho esto añadiremos la siguiente configuracióń usando dos temas que
 <<instalar-paquetes>>
 <<autopair-company>>
 <<ivy>>
+<<emacs-bonito>>
 <<org-hide-emphasis>>
 <<bullets-format>>
 <<bullets>>
+<<visual-line>>
 <<autocompletado>>
 <<nlinum>>
 <<eshell>>
 <<circadian>>
+<<configuracion-externa>>
 #+END_SRC
 
 * Exportando 
