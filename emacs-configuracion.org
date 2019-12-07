@@ -55,6 +55,7 @@ org-ac
 org-bullets
 smex
 paradox
+dashoard
 magit
 circadian))
 

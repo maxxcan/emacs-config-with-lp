@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title></title>
+<meta name="author" content="(Patricio Martínez)"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
+
+<link rel="stylesheet" href="./reveal.js/css/theme/moon.css" id="theme"/>
+
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = './reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide"><h2 class="author">Patricio Martínez</h2><p class="date">Created: 2019-10-04 vie 13:17</p>
+</section>
+<p>
+;; configuración para el org-mode
+</p>
+
+<p>
+;; Org-mode, configuración general
+</p>
+
+<p>
+;; Además de añadir notas y lugares comunes
+</p>
+
+<p>
+;;; Should write a toggle function to show descriptive or literate links in Org-mode
+;;(setq org-descriptive-links nil)
+</p>
+
+<p>
+;; Define the location of the file to hold tasks
+(setq org-default-notes-file "~/Documentos/GTD/notas.org")
+</p>
+
+<p>
+;; Define a kanban style set of stages for todo tasks
+(setq org-todo-keywords
+      '((sequence "PORHACER" "ENPROCESO" "BLOQUEADO" "REVISION" "|" "HECHO" "ARCHIVADO")))
+</p>
+
+<p>
+;; Setting Colours (faces) for todo states to give clearer view of work
+(setq org-todo-keyword-faces
+      '(("PORHACER" . org-warning)
+        ("ENPROCESO" . "yellow")
+        ("BLOQUEADO" . "red")
+        ("REVISION" . "orange")
+        ("HECHO" . "green")
+        ("ARCHIVADO" .  "blue")))
+</p>
+
+<p>
+;; Progress Logging
+;; When a TODO item enters DONE, add a CLOSED: property with current date-time stamp
+(setq org-log-done 'time)
+</p>
+
+<p>
+(setq org-agenda-files (list "~/Documentos/GTD/GTD.org"))
+</p>
+
+<p>
+(setq org-agenda-include-diary t)
+(setq org-agenda-include-all-todo t)
+</p>
+
+<p>
+;;; Identado en los bloques de código en org-mode
+</p>
+
+<p>
+(setq org-src-tab-acts-natively t)
+</p>
+
+
+<p>
+;; org-reveal
+</p>
+
+<p>
+(require 'org-re-reveal)
+</p>
+
+<p>
+(require 'ox-reveal)
+</p>
+
+<p>
+;; (setq org-reveal-root "<a href="file:///opt/reveal.js/">file:///opt/reveal.js/</a>") 
+</p>
+
+
+<p>
+;; configuración del calendario chulo
+</p>
+
+<p>
+(require 'calfw-org)
+(setq cfw:org-overwrite-default-keybinding t)
+(setq calendar-week-start-day 1)
+(setq calendar-month-name-array
+      ["Enero" "Febrero" "Marzo" "Abril" "Mayo" "Junio"
+       "Julio"    "Agosto"   "Septiembre" "Octubre" "Noviembre" "Diciembre"])
+(setq calendar-day-name-array
+      ["Domingo" "Lunes" "Martes" "Miércoles" "Jueves" "Viernes" "Sábado"])
+</p>
+
+<p>
+;; Prettier bullets
+</p>
+
+<p>
+(use-package org-bullets
+  :commands (org-bullets-mode)
+  :init
+  (setq org-bullets-bullet-list '("●"))
+  (add-hook 'org-mode-hook #'org-bullets-mode))
+</p>
+
+<p>
+;; configuración para el autocompletado de org con org-ac
+</p>
+
+<p>
+(require 'org-ac)
+(org-ac/config-default)
+</p>
+
+<p>
+;; wrap
+</p>
+
+<p>
+(add-hook 'org-mode-hook 'turn-on-visual-line-mode)
+</p>
+
+<p>
+;;Configure org-mode with cider
+</p>
+
+<p>
+;; Configure Org-mode supported languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((clojure . t)
+   (dot . t)
+   (emacs-lisp . t)))
+</p>
+
+<p>
+;; Specify the Clojure back-end we want to use in Org-mode.
+;; I personally use Cider, but one could specify Slime
+(setq org-babel-clojure-backend 'cider)
+</p>
+
+
+<p>
+(defun gtd ()
+  "Entrada principal para el archivo gtd"
+  (interactive)
+  (find-file "~/Documentos/GTD/GTD.org"))
+</p>
+
+<p>
+(defun actividades ()
+  "Entrada para el archivo de actividades"
+  (interactive)
+  (find-file "~/Documentos/GTD/Actividades.org"))
+</p>
+
+<p>
+(defun notas ()
+  "Entraa para el archivo de notas"
+  (interactive)
+  (find-file "~/Documentos/GTD/notas.org"))
+</p>
+
+<p>
+;;;;;;;;; ya veré para qué es esto
+</p>
+
+<p>
+(setq org-irc-link-to-logs t)
+</p>
+
+<p>
+(require 'org-id)
+(setq org-id-link-to-org-use-id 'create-if-interactive)
+</p>
+
+
+<p>
+;;;;;;;;;;;; org-present
+</p>
+
+<p>
+(eval-after-load "org-present"
+  '(progn
+     (add-hook 'org-present-mode-hook
+               (lambda ()
+                 (org-present-big)
+                 (org-display-inline-images)
+                 (org-present-hide-cursor)
+                 (org-present-read-only)))
+     (add-hook 'org-present-mode-quit-hook
+               (lambda ()
+                 (org-present-small)
+                 (org-remove-inline-images)
+                 (org-present-show-cursor)
+                 (org-present-read-write)))))
+</p>
+
+
+<p>
+(setq org-modules '(org-habit))
+(eval-after-load 'org '(org-load-modules-maybe t))
+</p>
+
+
+<p>
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org for cider
+</p>
+
+<p>
+(setq org-babel-clojure-backend 'cider)
+(require 'cider)
+</p>
+
+
+<p>
+(setq org-babel-clojure-sync-nrepl-timeout nil)
+</p>
+
+<p>
+;; Let's have pretty source code blocks
+(setq org-edit-src-content-indentation 0
+      org-src-tab-acts-natively t
+      org-src-fontify-natively t
+      org-confirm-babel-evaluate nil
+      org-support-shift-select 'always)
+</p>
+
+<p>
+;; make sure that when we export in HTML, that we don't export with inline css.
+;; that way the CSS of the HTML theme will be used instead which is better
+(setq org-html-htmlize-output-type 'css)
+</p>
+
+<p>
+;; Enable Confluence export
+(require 'ox-confluence)
+</p>
+</div>
+</div>
+<script src="./reveal.js/js/reveal.js"></script>
+
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+multiplex: {
+    secret: '', // null if client
+    id: '', // id, obtained from socket.io server
+    url: '' // Location of socket.io server
+},
+
+// Optional libraries used to extend on reveal.js
+dependencies: [
+ { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+ { src: './reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: './reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: './reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }]
+});
+</script>
+</body>
+</html>
