@@ -5,18 +5,10 @@
 
 * Introducción
 
-* Creando el directorio de configuración de Emacs
-
-#+begin_src emacs-lisp :results silent
-(make-directory "~/.config/emacs/config")
-#+end_src
-
-#+RESULTS:
-
 * Añadiendo el repositorio melpa
 Primero vamos a añadir los repositorios melpa. La solución es simplemente yendo a su [[https://melpa.org/#/][web]]. 
 
-Ahí nos indican que añadamos lo siguiente en nuestro fichero *emacs* 
+Ahí nos indican que añadamos lo siguiente en nuestro fichero *.emacs* 
 
 #+name: repo-melpa
 #+BEGIN_SRC emacs-lisp :noweb yes
@@ -54,9 +46,6 @@ ivy
 org-ac
 org-bullets
 smex
-paradox
-dashoard
-magit
 circadian))
 
 ;; comprobar la lista de paquetes
@@ -83,8 +72,8 @@ circadian))
 
  Luego lo configuremos escribiendo en nuestro fichero .emacs los siguiente:
 
- #+name: autopair-company
- #+BEGIN_SRC emacs-lisp :noweb yes
+ #+name: autopair-company :noweb yes
+ #+BEGIN_SRC emacs-lisp 
  (require 'autopair)
  (autopair-global-mode)
 
@@ -117,15 +106,13 @@ circadian))
  #+END_SRC
 
  Además para que nos sugiran los comandos que más usamos instalamos el paquete *smex*
+** Poniendo a Emacs bonito 
 
-** Poniendo bonito a Emacs
-Vamos a quitarle la barra de los iconos y la del scroll
-
-#+name: emacs-bonito
+#+name: ui
 #+BEGIN_SRC emacs-lisp :noweb yes
+;; ocultando la barra de iconos y la de scroll
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
-(setq inhibit-startup-screen t)
 #+END_SRC
 
 ** Poniendo bonito a Org
@@ -211,232 +198,10 @@ Vamos a quitarle la barra de los iconos y la del scroll
 
  #+name: nlinum
  #+BEGIN_SRC emacs-lisp :noweb yes
- (global-set-key (kbd "<f9>") #'nlinum-mode)
+ (global-set-key (kbd "<f8>") #'nlinum-mode)
  #+END_SRC
 
-Y también podemos usar el paquete neotree para que pulsando una tecla nos aparezca un árbol de directorios y ficheros. 
-
-#+name: neotree
-#+BEGIN_SRC emacs-lisp :noweb yes
-(global-set-key (kdb "<f8>") #'neotree-toggle)
-#+END_SRC
-
-
  Con ese código cuando pulsemos la tecla f8 aparecerán los números al lado de las líneas.
-
-* Configurando Emacs para trabajar con ESS 
-
-Para trabajar con ESS lo primero que vamos a hacer es elegir  es cómo se va a subdividir nuestro buffer. Lo vamos a hacer de forma que se parezca algo al programa Rstudio para las personas que ya lo han usado con anterioridad. 
-
-Una vez que hemos instalado los paquetes  ess-R-data-view, ess-smart-equals y ess-smart-underscore, vamos a añadir la siguiente configuración. 
-
-#+name:  ess
-#+BEGIN_SRC emacs-lisp :noweb yes
-(setq display-buffer-alist
-      `(("*R Dired"
-         (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . right)
-         (slot . -1)
-         (window-width . 0.33)
-         (reusable-frames . nil))
-        ("*R"
-         (display-buffer-reuse-window display-buffer-at-bottom)
-         (window-width . 0.5)
-         (reusable-frames . nil))
-        ("*Help"
-         (display-buffer-reuse-window display-buffer-in-side-window)
-         (side . right)
-         (slot . 1)
-         (window-width . 0.33)
-         (reusable-frames . nil))))
-#+END_SRC
-
-Ahora vamos a hacer que *markdown* funcione bien con Emacs. Para ellos instalaremos los paquetes *markdown-mode* y *markdown-mode+* y añadiremos lo siguiente: 
-
-#+name:  markdown 
-#+BEGIN_SRC emacs-lisp :noweb yes
-(require 'markdown-mode)
-;;; Markdown mode
-(autoload 'markdown-mode "markdown-mode" "Major mode for editing Markdown files" t)
-(setq auto-mode-alist (cons '("\\.markdown" . markdown-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.md" . markdown-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.ronn?" . markdown-mode) auto-mode-alist))
-
-(require 'poly-R)
-(require 'poly-markdown)
-
-(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown+r-mode))
-
-#+END_SRC
-
-* Configurando Emacs para programar en Fortran
-
-Emacs ya está de por sí muy preparado para trabajar con ficheros en fortran y compilarlos. Pero vamos a añadir algunas cosas para mejorar aún más la experiencia. Esta configuracion la conseguí de esta [[https://gist.github.com/aradi/68a4ff8430a735de13f13393213f0ea8][web]]. 
-
-#+name:  fortran
-#+BEGIN_SRC emacs-lisp :noweb yes
-;; Fortran settings
-(setq fortran-continuation-string "&")
-(setq fortran-do-indent 2)
-(setq fortran-if-indent 2)
-(setq fortran-structure-indent 2)
-
-;; Fortran 90 settings
-(setq f90-do-indent 2)
-(setq f90-if-indent 2)
-(setq f90-type-indent 2)
-(setq f90-program-indent 2)
-(setq f90-continuation-indent 4)
-(setq f90-smart-end 'blink)
-
-;; Set Fortran and Fortran 90 mode for appropriate extensions
-(setq auto-mode-alist
-      (cons '("\\.F90$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.pf$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.fpp$" . f90-mode) auto-mode-alist))
-(setq auto-mode-alist
-      (cons '("\\.F$" . fortran-mode) auto-mode-alist))
-
-;; Swap Return and C-j in Fortran 90 mode
-(add-hook 'f90-mode-hook
-	  '(lambda ()
-	     (define-key f90-mode-map [return] 'f90-indent-new-line)
-	     (define-key f90-mode-map "\C-j" 'newline)
-	     (setq fill-column 100)
-         (abbrev-mode)
-         (setq-default indent-tabs-mode nil)
-         (setq whitespace-line-column 100)
-         (setq whitespace-style '(face tabs lines-tail empty))
-         (whitespace-mode)		 
-;;         (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-	     )
-	  )
-
-;; Read in handy abbreviations for Fortran
-(quietly-read-abbrev-file "~/.emacs_abbrevs")
-#+END_SRC
-
-Como vemos ahi necesitamos un fichero .emacs_abbrevs, éste lo crearemos con el siguiente código. 
-
-
-#+BEGIN_SRC emacs-lisp :tangle .emacs_abbrevs :noweb yes :padline no :results silent
-;;
-;; Store this file as ~/.emacs_abbrevs
-;;
-
-(define-abbrev-table 'f90-mode-abbrev-table '(
-    ("im$" "implicit none" nil 0)
-    ("po$" "pointer" nil 1)
-    ("wr$" "write" nil 0)
-    ("pm$" "program" nil 0)
-    ("al$" "allocate" nil 0)
-    ("bd$" "block data" nil 0)
-    ("if$" "interface" nil 0)
-    ("pv$" "private" nil 0)
-    ("op$" "optional" nil 0)
-    ("ba$" "backspace" nil 0)
-    ("nu$" "nullify" nil 0)
-    ("wh$" "where" nil 0)
-    ("pa$" "parameter" nil 0)
-    ("elw$" "elsewhere" nil 0)
-    ("ab$" "allocatable" nil 0)
-    ("fu$" "function" nil 0)
-    ("ey$" "entry" nil 0)
-    ("ex$" "external" nil 0)
-    ("fo$" "format" nil 0)
-    ("fl$" "forall" nil 0)
-    ("mo$" "module" nil 1)
-    ("tr$" ".true." nil 0)
-    ("eq$" "equivalence" nil 0)
-    ("eli$" "else if" nil 0)
-    ("dw$" "do while" nil 0)
-    ("sub$" "subroutine" nil 0)
-    ("na$" "namelist" nil 0)
-    ("el$" "else" nil 0)
-    ("lo$" "logical" nil 0)
-    ("sq$" "sequence" nil 0)
-    ("cy$" "cycle" nil 0)
-    ("fa$" ".false." nil 0)
-    ("rw$" "rewind" nil 0)
-    ("cx$" "complex" nil 0)
-    ("rt$" "return" nil 0)
-    ("t$" "type" nil 0)
-    ("ta$" "target" nil 0)
-    ("r$" "real" nil 0)
-    ("di$" "dimension" nil 0)
-    ("se$" "select" nil 0)
-    ("cn$" "contains" nil 0)
-    ("df$" "define" nil 0)
-    ("cm$" "common" nil 0)
-    ("de$" "deallocate" nil 0)
-    ("cl$" "close" nil 0)
-    ("i$" "integer" nil 0)
-    ("in$" "intent" nil 0)
-    ("ini$" "intent(in)" nil 0)
-    ("ino$" "intent(out)" nil 0)
-    ("inio$" "intent(inout)" nil 0)
-    ("pu$" "public" nil 0)
-    ("rc$" "recursive" nil 0)
-    ("pr$" "print" nil 0)
-    ("c$" "character" nil 0)
-    ("as$" "assignment" nil 0)
-    ("mp$" "module procedure" nil 0)
-    ("ps$" "present" nil 0)
-    ("wrs$" "write(*,*)" nil 0)
-    ("prs$" "print *," nil 0)
-    ("rwp$" "real(wp)" nil 0)
-    ("cdp$" "complex(dp)" nil 0)
-    ("pn$" "=> null()" nil 0)
-    ("p$" "procedure" nil 0)
-    ))
-#+END_SRC
-
-* Configurando Eshell
-
-Dentro de Emacs podemos abrir una terminal con bash, zsh, etc, pero además tiene su propia línea de comandos programado en *elisp*, la llamada *eshell*. 
-
-Para configurarla mejor y añadirle color añadiremos la siguiente configuración. 
-
-#+name: eshell
-#+BEGIN_SRC emacs-lisp :noweb yes
-;;; eshell ;;;;;;;;;;;;;;,
-
-(eval-after-load "em-ls"
-    '(progn
-       (defun ted-eshell-ls-find-file-at-point (point)
-         "RET on Eshell's `ls' output to open files."
-         (interactive "d")
-         (find-file (buffer-substring-no-properties
-                     (previous-single-property-change point 'help-echo)
-                     (next-single-property-change point 'help-echo))))
-
-       (defun pat-eshell-ls-find-file-at-mouse-click (event)
-         "Middle click on Eshell's `ls' output to open files.
- From Patrick Anderson via the wiki."
-         (interactive "e")
-         (ted-eshell-ls-find-file-at-point (posn-point (event-end event))))
-
-       (let ((map (make-sparse-keymap)))
-         (define-key map (kbd "RET")      'ted-eshell-ls-find-file-at-point)
-         (define-key map (kbd "<return>") 'ted-eshell-ls-find-file-at-point)
-         (define-key map (kbd "<mouse-2>") 'pat-eshell-ls-find-file-at-mouse-click)
-         (defvar ted-eshell-ls-keymap map))
-
-       (defadvice eshell-ls-decorated-name (after ted-electrify-ls activate)
-         "Eshell's `ls' now lets you click or RET on file names to open them."
-         (add-text-properties 0 (length ad-return-value)
-                              (list 'help-echo "RET, mouse-2: visit this file"
-                                    'mouse-face 'highlight
-                                    'keymap ted-eshell-ls-keymap)
-                              ad-return-value)
-         ad-return-value)))
-
-
-(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
-#+END_SRC
 
 * Cambiando el tema según la hora del día
 
@@ -455,84 +220,6 @@ Una vez hecho esto añadiremos la siguiente configuracióń usando dos temas que
 (circadian-setup)
 #+END_SRC
 
-* Haciendo que Emacs coja la configuración de ficheros aparte del init
-Vamos a hacer que podamos crear ficheros con configuraciones concretas y no tengamos que meterlas
-en el init sino que iran en un subdirectorio llamado config. Cada fichero será para configurar una cosa
-
-
-
-#+name: configuracion-externa
-#+BEGIN_SRC emacs-lisp
-(load "~/config/emacs/config/load-directory")
-
-(load-directory "~/.config/emacs/config")
-
-#+END_SRC
-
-** Escribiendo el fichero que tenemos que tener en el directorio config para que lea todos los ficheros de configuración en ese directorio
-
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/load-directory :noweb yes :padline no :results silent
-(defun load-directory (directory)
-  "Load recursively all `.el' files in DIRECTORY."
-  (dolist (element (directory-files-and-attributes directory nil nil nil))
-    (let* ((path (car element))
-           (fullpath (concat directory "/" path))
-           (isdir (car (cdr element)))
-           (ignore-dir (or (string= path ".") (string= path ".."))))
-      (cond
-       ((and (eq isdir t) (not ignore-dir))
-        (load-directory fullpath))
-       ((and (eq isdir nil) (string= (substring path -3) ".el"))
-        (load (file-name-sans-extension fullpath)))))))
-
-#+END_SRC
-
-* Mejorando la presentación de inicio
-Vamos a crear un fichero de configuación llamado dashoard para configurar el paquete en cuestión que es un paquete que coge el inicio de spacemacs y permite usarlo en cualquier configuración de Emacs. 
-
-#+name: dashboard
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/dashboard.el :noweb yes :padline no :results silent
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-
-;; Set the title
-(setq dashboard-banner-logo-title "Bienvenido al mejor Editor del Mundo -- Emacs --")
-
-
-(setq dashboard-startup-banner 'logo)
-;; Value can be
-;; 'official which displays the official emacs logo
-;; 'logo which displays an alternative emacs logo
-;; 1, 2 or 3 which displays one of the text banners
-;; "path/to/your/image.png" which displays whatever image you would prefer
-
-;; Content is not centered by default. To center, set
-(setq dashboard-center-content nil)
-
-;; To disable shortcut "jump" indicators for each section, set
-(setq dashboard-show-shortcuts nil)
-
-;;To customize which widgets are displayed, you can use the following snippet
-
-(setq dashboard-items '((recents  . 5)
-                        (projects . 5)
-                        (agenda . 5)))
-
-(setq dashboard-set-heading-icons t)
-(setq dashboard-set-file-icons t)
-
-(dashboard-modify-heading-icons '((recents . "file-text")
-                                  (bookmarks . "book")))
-
-(setq dashboard-set-init-info t)
-
-
-(add-to-list 'dashboard-items '(agenda) t)
-
-(setq show-week-agenda-p t)
-
-#+END_SRC
-
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/init :noweb yes :padline no :results silent
@@ -540,16 +227,13 @@ Vamos a crear un fichero de configuación llamado dashoard para configurar el pa
 <<instalar-paquetes>>
 <<autopair-company>>
 <<ivy>>
-<<emacs-bonito>>
+<<ui>>
 <<org-hide-emphasis>>
 <<bullets-format>>
 <<bullets>>
-<<visual-line>>
 <<autocompletado>>
 <<nlinum>>
-<<eshell>>
 <<circadian>>
-<<configuracion-externa>>
 #+END_SRC
 
 * Exportando 
