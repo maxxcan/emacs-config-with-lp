@@ -1,136 +1,249 @@
-#+title: intro-curso-emacs
-#+author: Patricio Martínez
-#+email: maxxcan@argonauta
+#+title: Emacs configuration with use-package
+#+author: Maxxcan Fox
+#+email: maxxcan@disroot.org
 #+date: <2019-09-14 sáb>
 
 * Introducción
 
-* Añadiendo el repositorio melpa
-Primero vamos a añadir los repositorios melpa. La solución es simplemente yendo a su [[https://melpa.org/#/][web]]. 
+Esta configuración la he creado basándome en varios sitios y lugares para intentar ser una configuración en el que solo haya que bajar este fichero, generar el fichero de configuración de Emacs y que todo funcione lo mejor posible instalando los paquetes necesarios. 
 
-Ahí nos indican que añadamos lo siguiente en nuestro fichero *.emacs* 
+La configuración de use-package para que automáticamente instale los paquetes necesarios la he sacado del blog [[http://cachestocaches.com/2015/8/getting-started-use-package/][caches to caches]]. 
 
-#+name: repo-melpa
-#+BEGIN_SRC emacs-lisp :noweb yes
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl
-    (warn "\
-Your version of Emacs does not support SSL connections,
-which is unsafe because it allows man-in-the-middle attacks.
-There are two things you can do about this warning:
-1. Install an Emacs version that does support SSL and be safe.
-2. Remove this warning from your init file so you won't see it again."))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
-#+END_SRC
+También de [[https://github.com/bbatsov/emacs.d/blob/master/init.el][https://metaredux.com/]]
 
-* Instalando los paquetes necesarios
+Otras configuraciones las he sacado de los respectivos sitios de los paquetes que configura. 
 
-Para instalar de forma automática los paquetes que necesitemos añadiremos el siguiente script: 
+* Copyright y notas
 
-#+name: instalar-paquetes
+#+name: copyright
 #+BEGIN_SRC emacs-lisp
-;; mi lista de paquetes
-(setq my-packages-list '(autopair
-company
-counsel
-ivy
-org-ac
-org-bullets
-smex
-circadian))
+;;; init --- Initialization code for emacs
 
-;; comprobar la lista de paquetes
-(unless package-archive-contents
-(package-refresh-contents))
+;; Copyright (c) 2019 Maxxcan Fox
 
-;; instalar
-(dolist (i-package my-packages-list)
-(unless(package-installed-p i-package)
-(package-install i-package)))
+;; Author: Maxxcan Fox <maxxcan@disroot.org>
+;; Maxxcan Fox <maxxcan@disroot.org>
+;; Created: 12-12-19
+
+;; Keywords: configuration
+;; Homepage: https://github.com/maxxcan/
+
+;; This program is free software; you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation; either version 2 of
+;; the License, or (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be
+;; useful, but WITHOUT ANY WARRANTY; without even the implied
+;; warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+;; PURPOSE.  See the GNU General Public License for more details.
+
+;;; Commentary:
+;; Calls my Emacs configuration files after installing use-package, which is
+;; necessary for operation.  See also:
+;;      http://www.cachestocaches.com/2015/8/getting-started-use-package/
+;;
+
+
 #+END_SRC
 
-* Configurando cosas
-** Autopair y company 
+* Información del usuario
 
- Vamos a instalar dos paquetes muy intersantes para escribir código. El *autopair* que sirve para que nos termine paréntesis, llaves, etc, y el paqute *company* para el autocompletado. Podemos ir primeramente a las webs de [[https://github.com/joaotavora/autopair][autopair]] y [[https://company-mode.github.io/][company]]. 
-
- Para instalarlos: 
-
- #+BEGIN_SRC emacs-lisp
- package-install autopair
- package-install company
- #+END_SRC
-
- Luego lo configuremos escribiendo en nuestro fichero .emacs los siguiente:
-
- #+name: autopair-company :noweb yes
- #+BEGIN_SRC emacs-lisp 
- (require 'autopair)
- (autopair-global-mode)
+#+name: name
+#+BEGIN_SRC emacs-lisp
+Maxxcan Fox
+#+END_SRC
 
 
- (add-hook 'after-init-hook 'global-company-mode)
- #+END_SRC
+#+name: mail-address
+#+BEGIN_SRC emacs-lisp
+maxxcan@disroot.org
+#+END_SRC
 
-** Ivy y otras cosas 
 
- Ahora vamos a instalar una serie de paquetes que nos van a hacer la vida más fácil a la hora de trabajar con Emacs. 
+#+name: user
+#+BEGIN_SRC emacs-lisp :noweb yes
+;;
+;; with this variable set the name and e-mail of user
+;;
+(setq user-full-name "<<name>>")
+(setq user-mail-address "<<mail-address>>")
+
+#+END_SRC
+
+* Instalación, configuración y uso de use-package
+
+Para instalar de forma automática los paquetes que necesitemos usando use-package añadiremos el siguiente script: 
+
+#+name: use-package
+#+BEGIN_SRC emacs-lisp
+;;;
+;;;;; install the melpa repository
+;;
+(require 'package)
+(setq package-archives (append package-archives
+			       '(("melpa" . "http://melpa.org/packages/"))))
+(package-initialize)
+
+;; Bootstrap 'usepackage
+(unless (package-installed-p 'use-package)
+(package-refresh-contents)
+(package-install 'use-package))
+
+;; Enable use-package
+
+(eval-when-compile
+  (require 'use-package))
+(require 'bind-key)
+
+
+;; Set the path variable
+(use-package exec-path-from-shell
+  :ensure t
+  :config (exec-path-from-shell-initialize))
+
+
+#+END_SRC
+
+* Recogida de basura 
+
+#+name:garbage
+#+begin_src emacs-lisp
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
+
+;; warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
+
+#+end_src
+
+* Algunas configuraciones estéticas iniciales
+
+#+name: initial-bootstrap
+#+begin_src emacs-lisp
+;; disable startup screen
+(setq inhibit-startup-screen t)
+
+;; disable bar-mode and scroll-mode
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+
+;; nice scrolling
+(setq scroll-margin 0
+      scroll-conservatively 100000
+      scroll-preserve-screen-position 1)
+
+;; mode line settings
+(line-number-mode t)
+(column-number-mode t)
+(size-indication-mode t)
+
+
+;; replace buffer-menu with ibuffer
+(use-package ibuffer 
+:ensure t
+:config
+(global-set-key (kbd "C-x C-b") #'ibuffer))
+
+
+#+end_src 
+
+* Añadiendo el tema doom y su modeline
+
+#+name: theme
+#+begin_src emacs-lisp
+(use-package doom-themes
+:ensure t
+:config
+(load-theme 'doom-dracula t))
+
+(use-package doom-modeline
+:ensure t
+:hook (after-init . doom-modeline-mode))
+
+;;;;;;;;;;;;
+#+end_src
+
+* Autopair y company 
+
+Vamos a instalar dos paquetes muy intersantes para escribir código. El *autopair* que sirve para que nos termine paréntesis, llaves, etc, y el paqute *company* para el autocompletado. Podemos ir primeramente a las webs de [[https://github.com/joaotavora/autopair][autopair]] y [[https://company-mode.github.io/][company]]. 
+
+
+#+name: autopair-company 
+#+BEGIN_SRC emacs-lisp
+;; config autopair
+;;;; to finish symbols like parentheses, brackets, etc.
+
+(use-package autopair 
+:ensure t
+:config (autopair-global-mode))
+
+;;
+;;config company for the autocomplete
+;;
+(use-package company
+:ensure t
+:config (add-hook 'after-init-hook 'global-company-mode))
+;;;
+;;
+#+END_SRC
+
+* Ivy y counsel
+
+Ahora vamos a instalar una serie de paquetes que nos van a hacer la vida más fácil a la hora de trabajar con Emacs. 
 
  Por un lado tenemos a  [[https://oremacs.com/swiper/][Ivy]]. Ivy es un sistema que autocompletado en diversos contextos como son menús, en el mini-buffer, código, etc. Lo mejor es verlo funcionar y ver como nos ayuda mucho a trabajar con Emacs. 
 
  Al mismo tiempo que *Ivy* vamos a instalar dos paquetes más que son *swiper y counsel*. Ambos ayudan mucho al trabajo con Emacs. Swiper ayuda a la búsqueda de texto dentro de un fichero y counsel ayuda a la búsqueda de comandos dentro del mini-buffer.  
 
- #+name: ivy
- #+BEGIN_SRC emacs-lisp :noweb yes
- (setq ivy-use-virtual-buffers t)
- (setq ivy-count-format "(%d/%d) ")
- 
- (global-set-key (kbd "C-s") 'swiper)
- (global-set-key (kbd "M-x") 'counsel-M-x)
- (global-set-key (kbd "C-x C-f") 'counsel-find-file)
- (global-set-key (kbd "<f1> f") 'counsel-describe-function)
- (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
- (global-set-key (kbd "<f1> l") 'counsel-find-library)
- (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
- (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+#+name: ivy
+#+begin_src emacs-lisp
 
- #+END_SRC
+  (use-package ivy
+  :ensure t
+  :config 
+   (setq ivy-use-virtual-buffers t)
+   (setq ivy-count-format "(%d/%d) "))
 
- Además para que nos sugiran los comandos que más usamos instalamos el paquete *smex*
-** Poniendo a Emacs bonito 
+  (use-package swiper
+  :ensure t
+  :config 
+  (global-set-key (kbd "C-s") 'swiper))
 
-#+name: ui
-#+BEGIN_SRC emacs-lisp :noweb yes
-;; ocultando la barra de iconos y la de scroll
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
-#+END_SRC
 
-** Poniendo bonito a Org
+  (use-package counsel
+  :ensure t
+  :config 
+   (global-set-key (kbd "M-x") 'counsel-M-x)
+   (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+   (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+   (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+   (global-set-key (kbd "<f1> l") 'counsel-find-library)
+   (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+   (global-set-key (kbd "<f2> u") 'counsel-unicode-char))
+#+end_src
 
- Org mode es una de las mejores maravillas que tiene Emacs. Se le suele llamar una skill app dentro de Emacs. Darían muchos documentos para explicar todo lo que se puede hacer con org-mode pero al menos para empezar podemos hacer que sea agradable a la vista y más cómodo de usar. Para ellos nos basaremos en un artículo de *Howard Abrams* llamado *org-mode como un procesador de texto* que podemos encontrar [[http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html][aquí]]. 
+* Configuraciones básicas para Orgmode
+
+Org mode es una de las mejores maravillas que tiene Emacs. Se le suele llamar una skill app dentro de Emacs. Darían muchos documentos para explicar todo lo que se puede hacer con org-mode pero al menos para empezar podemos hacer que sea agradable a la vista y más cómodo de usar. Para ellos nos basaremos en un artículo de *Howard Abrams* llamado *org-mode como un procesador de texto* que podemos encontrar [[http://www.howardism.org/Technical/Emacs/orgmode-wordprocessor.html][aquí]]. 
 
  De ese artículo podemos sacar la siguiente configuración: 
-
- + Para que cuando usemos * / o _ para resaltar texto, estos símbolos no aparezcan:
+ 
+** Para que cuando usemos * / o _ para resaltar texto, estos símbolos no aparezcan:
 
  #+name: org-hide-emphansis 
  #+BEGIN_SRC emacs-lisp :noweb yes
 
- (setq org-hide-emphasis-markers t)
+(use-package org
+:ensure t
+:config
+(setq org-hide-emphasis-markers t))
 
  #+END_SRC 
 
- + Para mejorar los bullets y que sean más bonitos.
+** Para mejorar los bullets y que sean más bonitos
 
  #+name: bullets-format
  #+begin_src emacs-lisp :noweb yes
@@ -139,102 +252,221 @@ circadian))
                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
  #+end_src 
 
-  ** Mejorar aún más los bullets y lo haremos instalando primero el paquete *org-bullets*
+** Mejorando aún más el aspecto de los bullets gracias al paquete *org-bullets*
 
- #+name:  bullets
- #+BEGIN_SRC emacs-lisp :noweb yes
- (require 'org-bullets)
- (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
- #+END_SRC 
+#+name: org-bullets
+#+BEGIN_SRC emacs-lisp
+(use-package org-bullets
+:ensure t
+:config 
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+;;;;;;
+#+END_SRC 
 
- + Mejorando las cabeceras  
+** Adaptando el texto a la ventana
+Finalmente haremos que cuando se visualice un fichero con extensión .org éste se adapte a la ventana y cuando la línea llegue al final de ésta haga un salto de carro. Para ellos añadiremos la línea 
 
- Finalmente podemos mejorar el aspecto de las cabeceras de capítulos y secciones para que tengan diferentes tamaños. 
+#+name: visual-line
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook 'visual-line-mode)
 
- #+name:  cabeceras
- #+BEGIN_SRC emacs-lisp :noweb yes
- (let* ((variable-tuple (cond ((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
-                              ((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
-                              ((x-list-fonts "Verdana")         '(:font "Verdana"))
-                              ((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
-                              (nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
-	(base-font-color     (face-foreground 'default nil 'default))
-	(headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+;;;;
+#+END_SRC
 
-   (custom-theme-set-faces 'user
-                           `(org-level-8 ((t (,@headline ,@variable-tuple))))
-                           `(org-level-7 ((t (,@headline ,@variable-tuple))))
-                           `(org-level-6 ((t (,@headline ,@variable-tuple))))
-                           `(org-level-5 ((t (,@headline ,@variable-tuple))))
-                           `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
-                           `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
-                           `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
-                           `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
-                           `(org-document-title ((t (,@headline ,@variable-tuple :height 1.5 :underline nil
- #+END_SRC 
+** Autocompletado para Org-mode 
 
- + Finalmente haremos que cuando se visualice un fichero con extensión .org éste se adapte a la ventana y cuando la línea llegue al final de ésta
- haga un salto de carro. Para ellos añadiremos la línea 
+Para activar el autocompletado en org instalremos el paquete *org-ac* y añadiremos la siguiente configuración:
 
- #+name: visual-line
- #+BEGIN_SRC emacs-lisp :noweb yes
- (add-hook 'org-mode-hook 'visual-line-mode)
- #+END_SRC
+#+name:org-ac
+#+BEGIN_SRC emacs-lisp
+(use-package org-ac
+:ensure t
+:config
+(org-ac/config-default))
+#+END_SRC 
 
+** Todo el código org necesario
 
- Para activar el autocompletado en org instalaremos el paquete *org-ac* y añadiremos la siguiente configuración: 
+#+name: org
+#+BEGIN_SRC emacs-lisp :noweb yes
+<<org-hide-emphasis>>
+<<bullets-format>>
+<<org-bullets>>
+<<visual-line>>
+<<org-ac>>
+#+END_SRC
 
- #+name:  autocompletado
- #+BEGIN_SRC emacs-lisp :noweb yes
- (require 'org-ac)
- (org-ac/config-default)
- #+END_SRC
-
-** Añadiendo número de líneas 
-
+* Añadiendo números de líneas
  En emacs tenemos mucha información en el mini-buffer como el nombre del archivo, el modo en el que está, los modos menores y la línea en la que estamos, pero hay que reconocer que muchas veces es más cómodo tener los números de línea a la izquierda del documento, junto a las líneas del documento. Para ello tenemos el paquete *nlinum* 
 
  Así que tendremos que instalarlo y añadirlo a nuestra configuración. 
 
  #+name: nlinum
- #+BEGIN_SRC emacs-lisp :noweb yes
- (global-set-key (kbd "<f8>") #'nlinum-mode)
+ #+BEGIN_SRC emacs-lisp
+
+(use-package nlinum
+:ensure t
+:config
+(global-set-key (kbd "<f9>") #'nlinum-mode))
+
  #+END_SRC
 
- Con ese código cuando pulsemos la tecla f8 aparecerán los números al lado de las líneas.
+* Añadiendo neo-tree para la navegación a través de los ficheros
 
-* Cambiando el tema según la hora del día
+Aunque es muy cómodo usar el programar *dired* para navegar entre los ficheros es muy práctico usar programas como neo-tree que es una versión para Emacs del neovim. Yo lo tengo configurado para que con la tecla <f8> se active. 
 
-Para finalizar podemos hacer una cosa muy interesante y es cambiar el tema de todos los que podemos instalar a Emacs para adaptarlo a la hora del día. Esto es para poner temas claros por el día pero oscuros por la noche para descansar los ojos. Para hacer esto usaremos el paquete *circadian*. 
+#+name: neotree
+#+begin_src emacs-lisp
+(use-package neotree
+:ensure t
+:config
+(setq neo-theme 'icons)
+(global-set-key [f8] 'neotree-toggle))
 
-Una vez hecho esto añadiremos la siguiente configuracióń usando dos temas que ya vienen por defecto instalados en Emacs. 
+#+END_SRC
 
-#+name:  circadian
+* Añadiendo dashboard para un inicio bonito
+Para ponerle una pantalla de inicio bonito usaremos el paquete *dashboard* que es un paquete que usa Spacemacs en el inicio solo que adaptado para poder ser usado en cualquier Emacs aunque no usemos Spacemacs. La configuración básica es por ejemplo:
+
+#+name: dashboard
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+:ensure t
+:config
+(dashboard-setup-startup-hook)
+
+;; Set the title
+(setq dashboard-banner-logo-title "Bienvenido al mejor Editor del Mundo -- Emacs --")
+
+
+(setq dashboard-startup-banner 'logo)
+;; Value can be
+;; 'official which displays the official emacs logo
+;; 'logo which displays an alternative emacs logo
+;; 1, 2 or 3 which displays one of the text banners
+;; "path/to/your/image.png" which displays whatever image you would prefer
+
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content nil)
+
+;; To disable shortcut "jump" indicators for each section, set
+(setq dashboard-show-shortcuts nil)
+
+;;To customize which widgets are displayed, you can use the following snippet
+
+(setq dashboard-items '((recents  . 5)
+                        (projects . 5)
+                        (agenda . 5)))
+
+(setq dashboard-set-heading-icons t)
+(setq dashboard-set-file-icons t)
+
+(dashboard-modify-heading-icons '((recents . "file-text")
+                                  (bookmarks . "book")))
+
+(setq dashboard-set-init-info t)
+
+
+(add-to-list 'dashboard-items '(agenda) t)
+
+(setq show-week-agenda-p t))
+
+;;;;;;;;;;;;;
+#+END_SRC
+
+* Instalando projectile
+Projectile es un gestor de proyectos. Lo instalamos ya que lo pide dashboard.
+
+#+name: projectile
+#+BEGIN_SRC emacs-lisp(use-package projectile
+(use-package projectile
+  :ensure t
+  :config
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (projectile-mode +1))
+#+END_SRC
+* Instalando Smex y which-key
+Finalmente instalaremos dos paquetes que son muy útiles. El primero de ellos es *smex* el cual consigue que cuando empecemos a escribir un comando tras pulsar M-x los comandos que nos pongan primero gracias a counsel sean los que más hemos usado. 
+
+El segundo paquete es which-key y éste vale para cuando empecemos a usar las combinacionesde teclas. Este paquete lo que hace es que a la vez que vamos ejecutando las combinaciones de teclas se nos muestra una lista de qué siguiente combinación de teclas sigue y qué comando ejecutará.
+
+#+name: smex-whichkey
+#+BEGIN_SRC emcs-lisp
+;; iniciamos Smex
+(use-package smex
+:ensure t
+:config 
+(smex-initialize))
+;;;
+;; iniciamos el paquete which-key
+(use-package whick-key
+:ensure t
+:config
+(which-key-setup-minibuffer))
+;;;
+;;
+#+END_SRC
+* Separando la restante configuración en ficheros separados
+A partir de aquí prefiero dejar el fichero principal de configuración con poco contenido y el resto de configuraciones que sean ficheros pequeños con la configuración justa para los paquetes necesarios. Para eso añadiremos en el fichero principal de configuracón un archivo que lo que hace es cargar la configuración de todos los ficheros de configuración que hayan en su mismo directorio, y luego además escribimos una orden (cargada antes  de ese fichero) para que carguen todos los ficheros de ese directorio.
+
+Además definimos el path que variará según tu versión de Emacs
+
+#+name: config-path
+#+BEGIN_SRC emacs-lisp
+~/.config/emacs/config
+#+END_SRC
+
+
+Además vamos a crear  el fichero load-directory que es el que carga todos los ficheros de configuración de ese directorio, también recordar que hay que crear el directorio primero.
+
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/load-directory :mkdirp yes
+
+(defun load-directory (directory)
+  "Load recursively all `.el' files in DIRECTORY."
+  (dolist (element (directory-files-and-attributes directory nil nil nil))
+    (let* ((path (car element))
+           (fullpath (concat directory "/" path))
+           (isdir (car (cdr element)))
+           (ignore-dir (or (string= path ".") (string= path ".."))))
+      (cond
+       ((and (eq isdir t) (not ignore-dir))
+        (load-directory fullpath))
+       ((and (eq isdir nil) (string= (substring path -3) ".el"))
+        (load (file-name-sans-extension fullpath)))))))
+
+#+END_SRC
+
+
+#+name: load-directory
 #+BEGIN_SRC emacs-lisp :noweb yes
-;;circadian package
-;; install the circadian package
-(setq calendar-latitude 37.992241)
-(setq calendar-longitude -1.130654)
-(setq circadian-themes '((:sunrise . adwaita)
-			 (:sunset . misterioso)))
-(circadian-setup)
+;; cargamos el fichero load-directory 
+(load "<<config-path>>/load-directory")
+(load-directory "<<config-path>>")
+;;;
+;;;
 #+END_SRC
 
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/init :noweb yes :padline no :results silent
-<<repo-melpa>>
-<<instalar-paquetes>>
+<<copyright>>
+<<user>>
+<<use-package>>
+<<initial-bootstrap>>
+<<theme>>
 <<autopair-company>>
 <<ivy>>
-<<ui>>
-<<org-hide-emphasis>>
-<<bullets-format>>
-<<bullets>>
-<<autocompletado>>
+<<org>>
 <<nlinum>>
-<<circadian>>
+<<neotree>>
+<<dashboard>>
+<<projectile>>
+<<smex-whichkey>>
+<<load-directory>>
 #+END_SRC
+
 
 * Exportando 
 

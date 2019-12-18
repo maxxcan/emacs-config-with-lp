@@ -1,0 +1,39 @@
+#+title: Configuración de ibuffer
+#+author: Maxxcan Fox
+#+email: maxxcan@disroot.org
+
+* Introducción
+
+Ibuffer es un programa que mejora el manejo de los buffers por parte de Emacs.
+
+Vamos a añadir un pequeño código con algunas mejoras donde principalmente haremos que los buffers se agrupen en ciertos grupos dependiendo de lo que contengan unas pequeñas mejoras más.
+
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.config/emacs/config/ibuffer.el :padline no :results silent 
+(setq ibuffer-saved-filter-groups
+      (quote (("default"
+	             ("dired" (mode . dired-mode))
+	             ("org" (name . "^.*org$"))
+
+	             ("web" (or (mode . web-mode) (mode . js2-mode)))
+	             ("shell" (or (mode . eshell-mode) (mode . shell-mode)))
+	             ("mu4e" (name . "\*mu4e\*"))
+	             ("programming" (or
+			                         (mode . python-mode)
+			                         (mode . c++-mode)))
+	             ("emacs" (or
+			                   (name . "^\\*scratch\\*$")
+			                   (name . "^\\*Messages\\*$")))
+	             ))))
+(add-hook 'ibuffer-mode-hook
+	        (lambda ()
+	          (ibuffer-auto-mode 1)
+	          (ibuffer-switch-to-saved-filter-groups "default")))
+
+;; don't show these
+                                        ;(add-to-list 'ibuffer-never-show-predicates "zowie")
+;; Don't show filter groups if there are no buffers in that group
+(setq ibuffer-show-empty-filter-groups nil)
+
+;; Don't ask for confirmation to delete marked buffers
+(setq ibuffer-expert t)
+#+END_SRC
