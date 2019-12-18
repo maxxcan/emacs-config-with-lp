@@ -400,7 +400,7 @@ El segundo paquete es which-key y éste vale para cuando empecemos a usar las co
 (smex-initialize))
 ;;;
 ;; iniciamos el paquete which-key
-(use-package whick-key
+(use-package which-key
 :ensure t
 :config
 (which-key-setup-minibuffer))

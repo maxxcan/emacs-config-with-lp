@@ -1,9 +1,0 @@
-#+title: Configuración de org-general
-#+AUTHOR: Maxxcan Fox
-#+EMAIL: maxxcan@disroot.org
-
-* Introducción 
-
-Org mode es una navaja suiza para Emacs en particular y para la vida en general, para muchos es una killer app que tiene Emacs,de hecho, algunas personas solo usan Emacs por Org mode. 
-
-Este solo es uno de los muchos ficheros de configuración que haremos para 

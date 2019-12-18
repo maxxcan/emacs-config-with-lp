@@ -71,8 +71,8 @@ Además vamos a hacerle unos ajustes de aspecto, como poner que empiece el calen
 #+name: calendario
 #+BEGIN_SRC emacs-lisp
 (use-package calfw-org
-:ensure  t
 :defer t
+:ensure  t
 :config 
 (setq cfw:org-overwrite-default-keybinding t)
 (setq calendar-week-start-day 1)
@@ -110,6 +110,6 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
 #+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.config/emacs/config/org-general.el :padline no :results silent 
 <<agenda-y-notas>>
 <<tareas-y-colores>>
-<<calenario>>
+;;<<calendario>>
 <<funciones-tareas>>
 #+END_SRC
