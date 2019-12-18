@@ -401,9 +401,11 @@ El segundo paquete es which-key y éste vale para cuando empecemos a usar las co
 ;;;
 ;; iniciamos el paquete which-key
 (use-package which-key
+:defer 10
 :ensure t
 :config
-(which-key-setup-minibuffer))
+(which-key-setup-minibuffer)
+(which-key-mode 1))
 ;;;
 ;;
 #+END_SRC
