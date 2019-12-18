@@ -392,7 +392,7 @@ Finalmente instalaremos dos paquetes que son muy útiles. El primero de ellos es
 El segundo paquete es which-key y éste vale para cuando empecemos a usar las combinacionesde teclas. Este paquete lo que hace es que a la vez que vamos ejecutando las combinaciones de teclas se nos muestra una lista de qué siguiente combinación de teclas sigue y qué comando ejecutará.
 
 #+name: smex-whichkey
-#+BEGIN_SRC emcs-lisp
+#+BEGIN_SRC emacs-lisp
 ;; iniciamos Smex
 (use-package smex
 :ensure t
@@ -466,7 +466,6 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 <<smex-whichkey>>
 <<load-directory>>
 #+END_SRC
-
 
 * Exportando 
 
