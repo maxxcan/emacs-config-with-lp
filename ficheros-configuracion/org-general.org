@@ -8,7 +8,6 @@ Org mode es una navaja suiza para Emacs en particular y para la vida en general,
 
 Este solo es uno de los muchos ficheros de configuración que haremos para org mode ya que tiene tantas cosas que si lo hicieramos todo en uno nos saldría un fichero tremendamente largo.
 
-
 * Ficheros a usar
 
 Inicialmente solo vamos a configurar algunas cosas relacionadas con la gestión de tareas y el GTD con org mode.
@@ -113,3 +112,10 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
 ;;<<calendario>>
 <<funciones-tareas>>
 #+END_SRC
+
+* Exportando
+
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
