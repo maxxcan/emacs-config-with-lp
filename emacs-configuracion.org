@@ -147,7 +147,6 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 :config
 (global-set-key (kbd "C-x C-b") #'ibuffer))
 
-
 #+end_src 
 
 * Añadiendo el tema doom y su modeline
@@ -184,6 +183,7 @@ Vamos a instalar dos paquetes muy intersantes para escribir código. El *autopai
 ;;config company for the autocomplete
 ;;
 (use-package company
+:defer t
 :ensure t
 :config (add-hook 'after-init-hook 'global-company-mode))
 ;;;
@@ -409,6 +409,17 @@ El segundo paquete es which-key y éste vale para cuando empecemos a usar las co
 ;;;
 ;;
 #+END_SRC
+* Rainbow para que dibuje de distintos colores los  delimitadores
+Rainbow-delimiters es un paquete que colorea de distintos colores para que cuando trabajamos con muchos paréntesis, corchetes, etc, veamos la diferencia.
+#+name: rainbow
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+:ensure t
+:defer t
+:config
+(add-hook 'prog-mode-hook #'prog-delimiters-mode))
+#+END_SRC
+
 * Separando la restante configuración en ficheros separados
 A partir de aquí prefiero dejar el fichero principal de configuración con poco contenido y el resto de configuraciones que sean ficheros pequeños con la configuración justa para los paquetes necesarios. Para eso añadiremos en el fichero principal de configuracón un archivo que lo que hace es cargar la configuración de todos los ficheros de configuración que hayan en su mismo directorio, y luego además escribimos una orden (cargada antes  de ese fichero) para que carguen todos los ficheros de ese directorio.
 
@@ -466,6 +477,7 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 <<dashboard>>
 <<projectile>>
 <<smex-whichkey>>
+<<rainbow>>
 <<load-directory>>
 #+END_SRC
 
