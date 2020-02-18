@@ -6,10 +6,12 @@
 
 Eshell es el emulador de consola de texto que lleva incorporado Emacs. En Emacs podemos ejecutar cualquier shell, sea bash, zsh, tcs, etc, pero lo que hace a Eshell único es que además de las funciones propias de un emulador de consola como comandos unix, alias, etc, también puedes ejecutar ordenes escritas en elisp. 
 
+* El código
+
 Vamos a añadir un pequeño código para mejorar el aspecto y la usabilidad de Eshell
 
-
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/eshell.el :padline no :results silent
+#+name: principal
+#+BEGIN_SRC emacs-lisp 
 ;;; eshell ;;;;;;;;;;;;;;,
 
 (eval-after-load "em-ls"
@@ -45,3 +47,51 @@ Vamos a añadir un pequeño código para mejorar el aspecto y la usabilidad de E
 
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 #+END_SRC
+
+* Sugerencias para Eshell
+
+Con el paquete [[https://github.com/dieggsy/esh-autosuggest][esh-autosuggest]] nos crea Sugerencias basadas en nuestro historial al igual que fish
+
+#+name: sugerencias
+#+BEGIN_SRC emacs-lisp
+(use-package esh-autosuggest
+  :hook (eshell-mode . esh-autosuggest-mode)
+  ;; If you have use-package-hook-name-suffix set to nil, uncomment and use the
+  ;; line below instead:
+  ;; :hook (eshell-mode-hook . esh-autosuggest-mode)
+  :ensure t)
+#+END_SRC
+
+** Usandolo con Ivy
+
+Si usamos Ivy podemos combinarlo de la siguiente forma:
+
+#+NAME: ivy-sugerencias
+#+BEGIN_SRC emacs-lisp
+(setq ivy-do-completion-in-region t) ; this is the default
+
+(defun setup-eshell-ivy-completion ()
+  (define-key eshell-mode-map [remap eshell-pcomplete] 'completion-at-point)
+  ;; only if you want to use the minibuffer for completions instead of the
+  ;; in-buffer interface
+  (setq-local ivy-display-functions-alist
+              (remq (assoc 'ivy-completion-in-region ivy-display-functions-alist)
+                    ivy-display-functions-alist)))
+
+(add-hook 'eshell-mode-hook #'setup-eshell-ivy-completion)
+#+END_SRC
+
+* Juntando el código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/eshell.el :noweb yes :padline no :results silent
+<<principal>>
+<<sugerencias>>
+<<ivy-sugerencias>>
+#+END_SRC
+
+* Exportando
+
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
