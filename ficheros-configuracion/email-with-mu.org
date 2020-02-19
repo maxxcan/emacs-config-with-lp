@@ -1,0 +1,8 @@
+#+TITLE: email-with-mu
+#+AUTHOR: Maxxcan Fox
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción
+
+* Añadiendo el programa mu4e
+
