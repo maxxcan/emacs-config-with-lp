@@ -1,0 +1,157 @@
+#+title: clojure
+#+AUTHOR: Maxxcan Fox
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción
+
+Vamos a intentar una buena configuración de  inicio para el desarrollo tanto de Clojure como de Clojurescripts. 
+
+* Clojure en Emacs
+** Clojure mode
+Para trabajar con Clojure tenemos el *clojure-mode* dentro de melpa y para obtener más información podemos visitar su [[https://github.com/clojure-emacs/clojure-mode][página de github]]. 
+
+Añadiremos el paquete y unas configuraciones iniciales muy básicas. 
+
+#+NAME: clojure-mode
+#+BEGIN_SRC emacs-lisp
+(use-package clojure-mode
+:ensure t
+:defer t
+:config
+(define-clojure-indent
+  (implement '(1 (1)))
+  (letfn     '(1 ((:defn)) nil))
+  (proxy     '(2 nil nil (1)))
+  (reify     '(:defn (1)))
+  (deftype   '(2 nil nil (1)))
+  (defrecord '(2 nil nil (1)))
+  (specify   '(1 (1)))
+  (specify   '(1 (1)))))
+#+END_SRC
+
+** Paquetes relacionados
+
+Vamos a añadir algunos paquetes interesantes o aconsejables para trabjar junto a *clojure-mode*. 
+
+*** Refactorización 
+
+ El paquete *clj-refactor* proporciona soporte para la Refactorización en Clojure. Añadiremos además soporte para *CamelCase*. Es bastante útil cuando trabajamos con clases y métodos de Java. El modo menor de Emacs *subword-mode* nos dará este soporte.
+
+ #+name: refactor
+ #+BEGIN_SRC emacs-lisp
+;; Refactor for Clojure
+ (use-package clj-refactor
+ :ensure t
+ :defer t
+ :config
+ (add-hook 'clojure-mode-hook #'subword-mode))
+ #+END_SRC
+
+*** Smartparens para comprobar los paréntesis
+
+Smartparens es una alternativa más nueva que paredit que hace lo mismo. Tenemos más información en [[https://github.com/Fuco1/smartparens][su página web]]
+
+#+name: smartparens
+#+BEGIN_SRC emacs-lisp
+;;; Smartparens for clojure
+(use-package Smartparens
+:ensure t
+:defer t
+:config
+(add-hook 'clojure-mode-hook #'smartparens-stric-mode))
+
+#+END_SRC
+
+
+*** Paredit para Clojure
+
+El uso de paredit con Clojure (o código Lisp) es altamente recomendado. Ayuda a cerrar las distintas estructuras.
+
+#+name paredit
+#+BEGIN_SRC emacs-lisp
+;; paredit for Clojure
+(use-package paredit
+:ensure t
+:defer t
+:config
+(add-hook 'clojure-mode-hook #'paredit-mode))
+
+#+END_SRC
+
+**** RainbowDelimiters
+
+[[https://github.com/Fanael/rainbow-delimiters][RainbowDelimiters]] es un modo menor que colorea los paréntesis, corchetes, llaves, etc, depende de su profundidad. Cada sucesivo nivel tiene un color distinto. Esto ayuda mucho a la delimitación y entendimiento de las estructuras. Para ello añadiremos el siguiente código
+
+#+name: rainbow 
+#+BEGIN_SRC emacs-lisp
+(use-package rainbow-delimiters
+:ensure t
+:defer t
+:config
+(add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+#+END_SRC
+
+**** Mejorando la identación en Clojure
+
+ Para ello vamos a usar [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]] que es un modo menor que identa adecuadamente el código siempre.
+
+ #+name: indent
+ #+BEGIN_SRC emacs-lisp
+ ;;; aggressive-indent-mode for Clojure
+ (use-package aggressive-indent
+ :ensure t
+ :defer t
+ :config
+ (add-hook 'clojure-mode-hook #'aggressive-indent-mode))
+
+ #+END_SRC
+
+** Interacción con el REPL 
+
+Uno de los aspectos más fundamentales de los Lips en general y de Clojure en particular, la programación interactiva, es decir, ir comprobando el código  al mismo tiempo que vamos programando en contra de otras formas más tradicionales como escribir todo el código y luego probarlo. Para ello Clojure permite ir interactuando con el código gracias a un proceso llamado REPL. 
+
+*** CIDER 
+
+Para ello usaremos [[https://github.com/clojure-emacs/cider][CIDER]] que es un entorno de desarrollo interactivo inspirado en *SLIME* para Common Lips.
+
+Para que funcione tenemos que tener instalado [[https://leiningen.org/][Leiningen]] que es el que usa CIDER por defecto o [[https://boot-clj.com/][boot]] si configuramos CIDER para que lo use. 
+
+Vamos añadir un pequeño código de inicio para CIDER básado en [[http://ccann.github.io/2015/10/18/cider.html][Cloure At Sea]]. 
+
+#+name: cider
+#+BEGIN_SRC emacs-lisp
+;; cider 
+(use-package cider
+  :ensure t
+  :defer t
+  :init (add-hook 'cider-mode-hook #'clj-refactor-mode)
+  :diminish subword-mode
+  :config
+  (setq nrepl-log-messages t                  
+        cider-repl-display-in-current-window t
+        cider-repl-use-clojure-font-lock t    
+        cider-prompt-save-file-on-load 'always-save
+        cider-font-lock-dynamically '(macro core function var)
+        nrepl-hide-special-buffers t            
+        cider-overlays-use-font-lock t)         
+  (cider-repl-toggle-pretty-printing))
+
+#+END_SRC
+
+* Juntando el código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/clojure.el :noweb yes :padline no :results silent
+<<clojure-mode>>
+<<refactor>>
+<<paredit>>
+;;<<Smartparens>>
+<<rainbow>>
+<<indent>>
+<<cider>>
+#+END_SRC
+
+* Exportando
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
