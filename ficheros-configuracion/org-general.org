@@ -1,4 +1,4 @@
-#+title: Configuración de org-general
++title: Configuración de org-general
 #+AUTHOR: Maxxcan Fox
 #+EMAIL: maxxcan@disroot.org
 
