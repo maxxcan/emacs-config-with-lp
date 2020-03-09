@@ -1,0 +1,30 @@
+#+TITLE: Ensamblador para ARM
+#+AUTHOR: Patricio Martínez
+#+email: maxxcan@disroot.org
+
+* Introducción
+
+Emacs lleva por defecto soporte para lenguaje ensamblador pero de forma genérica. Nosotros lo que vamos a añadir es un paquete para que sea ensamblador específico para ARM.
+
+Ese paquete no está en melpa por lo que lo tendremos que descargar manualmente de su página de github y cargarlo.
+
+Para ello iremos a su [[https://github.com/charje/arm-mode][web]], y o bien descargarlo manualmente o ejecutar la orden:
+
+#+BEGIN_SRC shell
+cd ~./config/emacs/elpa/ ; git clone https://github.com/charJe/arm-mode.git
+#+END_SRC
+
+* Añadiendo el código necesario 
+
+Una vez hecho esto añadiremos el siguiente código:
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/arm.el :noweb yes :padline no :results silent
+(add-to-list 'load-path "~/.config/emacs/elpa/arm-mode")
+(require 'arm-mode)
+#+END_SRC
+
+Por defecto cuando abramos un fichero .s se activará el modo ensamblador normal, si queremos activar éste tendremos que escribir *Alt-x arm-mode*
+
+* Exportando
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
