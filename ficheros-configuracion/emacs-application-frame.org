@@ -1,0 +1,44 @@
+#+TITLE: Emacs application frame
+#+AUTHOR: Patricio Martínez
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción
+
+Emacs Application Framework, aka *EAF*, es un framework extensible que pretende revolucionar las capacidades gráficas de Emacs. Con EAF se puede desarrollar cualuquier aplicación en Qt5 e integrarlo en Emacs.
+
+Actualmente con EAF podemos usarlo como navegador web gráfico, previsualizador de markdown y org-mode, visor de imágenes y video, y otras cosas. Incluso podemos jugar al Doom.
+
+Para tener más información ir a su [[https://github.com/manateelazycat/emacs-application-framework][web]].
+
+* Instalación
+
+Para instalarlo si eres usuario de ArchLinux está en AUR, sino hay que tener instalado python3 y pip3 e instalar las siguientes dependencias:
+
+#+BEGIN_SRC shell
+sudo pip3 install dbus-python python-xlib pyqt5 pyqtwebengien pymupdf grip qrcode feedparser aria2p
+#+END_SRC
+
+Y clonamos el respositorio:
+
+#+BEGIN_SRC shell
+git clone https://github.com/manateelazycat/emacs-application-framework.git --depth=1
+#+END_SRC
+
+* Configuración
+
+Ahora vamos a configurarlo usando *use-package*:
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/eaf.el :noweb yes :padline no :results silent
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+#+END_SRC
+
+* Exportando
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
