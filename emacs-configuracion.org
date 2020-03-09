@@ -124,11 +124,11 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 #+name: initial-bootstrap
 #+begin_src emacs-lisp
 ;; disable startup screen
-(setq inhibit-startup-screen t)
+;;(setq inhibit-startup-screen t)
 
 ;; disable bar-mode and scroll-mode
-(tool-bar-mode -1)
-(toggle-scroll-bar -1)
+;;(tool-bar-mode -1)
+;;(toggle-scroll-bar -1)
 
 ;; nice scrolling
 (setq scroll-margin 0
@@ -378,7 +378,7 @@ Para ponerle una pantalla de inicio bonito usaremos el paquete *dashboard* que e
 Projectile es un gestor de proyectos. Lo instalamos ya que lo pide dashboard.
 
 #+name: projectile
-#+BEGIN_SRC emacs-lisp(use-package projectile
+#+BEGIN_SRC emacs-lisp
 (use-package projectile
   :ensure t
   :config
@@ -418,6 +418,15 @@ Rainbow-delimiters es un paquete que colorea de distintos colores para que cuand
 :defer t
 :config
 (add-hook 'prog-mode-hook #'prog-delimiters-mode))
+#+END_SRC
+
+* Usando el propio navegador de Emacs por defecto
+
+Por defecto, Emacs que se adapta muy bien al entorno donde estés trabajando abrirá el navegador que tengas configurado en tu escritorio por defecto cuando quieras abrir un enlace. Si en vez de que abra el navegador por defecto quieres que no salga de Emacs y use su propio navegador en modo texto añadiremos la siguiente línea de configuración a nuestro fichero de configuración
+
+#+name: eww
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function 'eww-browse-url)
 #+END_SRC
 
 * Separando la restante configuración en ficheros separados
@@ -468,16 +477,17 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 <<user>>
 <<use-package>>
 <<initial-bootstrap>>
-<<theme>>
+;;<<theme>>
 <<autopair-company>>
 <<ivy>>
 <<org>>
 <<nlinum>>
 <<neotree>>
-<<dashboard>>
+;;<<dashboard>>
 <<projectile>>
 <<smex-whichkey>>
 <<rainbow>>
+;;<<eww>>
 <<load-directory>>
 #+END_SRC
 
