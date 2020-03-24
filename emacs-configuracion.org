@@ -148,7 +148,7 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 (global-set-key (kbd "C-x C-b") #'ibuffer))
 
 #+end_src 
-
+* Añadiendo archivos recientes
 * Añadiendo el tema doom y su modeline
 
 #+name: theme
@@ -164,6 +164,13 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 
 ;;;;;;;;;;;;
 #+end_src
+
+Añadimos la opción de que nos muestre los archivos recientes.
+
+#+NAME: recent-files
+#+BEGIN_SRC emacs-lisp
+(recentf-mode 1)
+#+END_SRC
 
 * Autopair y company 
 
@@ -477,6 +484,7 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 <<user>>
 <<use-package>>
 <<initial-bootstrap>>
+<<recent-files>>
 ;;<<theme>>
 <<autopair-company>>
 <<ivy>>
