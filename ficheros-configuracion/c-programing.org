@@ -1,0 +1,125 @@
+#+TITLE: Programando en C/C++
+#+AUTHOR: Patricio Martínez
+#+email: maxxcan@disroot.org
+
+* Introducción
+
+* Código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/c-c++.el :noweb yes :padline no :results silent
+
+(use-package semantic
+  :ensure t
+  :defer t
+  :config
+  (global-semanticdb-minor-mode 1)
+  (global-semantic-idle-scheduler-mode 1)
+  (semantic-mode 1)
+  ;;(semantic-enable)
+  (defun company-semantic-setup ()
+    "Configure company-backends for company-semantic and company-yasnippet"
+    (delete 'company-irony company-backends)
+    (push '(company-semantic :with company-yasnippet) company-backends)))
+
+(global-ede-mode 1)
+
+(setq ede-custom-file (expand-file-name "cc-mode-projects.el" user-emacs-directory))
+(when (file-exists-p ede-custom-file)
+  (load ede-custom-file))
+
+(use-package company-c-headers
+  :ensure t
+  :defer t
+  :config
+  (defun company-c-headers-setup ()
+    (add-to-list 'company-backends 'company-c-headers))
+  (defun ede-object-system-include-path ()
+    (when ede-object
+      (ede-system-include-path  ede-object)))
+  (setq company-c-headers-path-system 'ede-object-system-include-path)
+  (setq header-custom-file (expand-file-name "cc-mode-custom.el" user-emacs-directory))
+  (when (file-exists-p header-custom-file)
+    (load header-custom-file)))
+
+(add-hook 'c++-mode-hook 'company-c-headers-setup)
+(add-hook 'c-mode-hook 'company-c-headers-setup)
+(add-hook 'c++-mode-hook 'company-semantic-setup)
+(add-hook 'c-mode-hook 'company-semantic-setup)
+
+
+(rtags-enable-standard-keybindings)
+(setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+
+(defun company-rtags-setup ()
+  "Configure company-backends for company-rtags."
+  (delete 'company-semantic company-backends)
+  (setq rtags-completions-enabled t)
+  (push '(company-rtags :with company-yasnippet) company-backends))
+
+(rtags-start-process-unless-running)
+(add-hook 'c++-mode-hook 'company-rtags-setup)
+(add-hook 'c-mode-hook 'company-rtags-setup)
+
+(require 'flycheck-rtags)
+(defun flycheck-rtags-setup ()
+  "Configure flycheck-rtags."
+  (flycheck-select-checker 'rtags)
+  (setq-local flycheck-highlighting-mode nil)
+  (setq-local flycheck-check-syntax-automatically nil))
+
+(add-hook 'c++-mode-hook 'flycheck-rtags-setup)
+(add-hook 'c-mode-hook 'flycheck-rtags-setup)
+
+(defun clang-format-on-save ()
+  (add-hook 'before-save-hook #'clang-format-buffer nil 'local))
+(add-hook 'c++-mode-hook 'clang-format-on-save)
+(add-hook 'c-mode-hook 'clang-format-on-save)
+
+(setq auto-mode-alist
+      (append
+       '(("CMakeLists\\.txt\\'" . cmake-mode))
+       '(("\\.cmake\\'" . cmake-mode))
+       auto-mode-alist))
+
+(defun company-cmake-setup ()
+  (add-to-list 'company-backends 'company-cmake))
+(add-hook 'cmake-mode-hook 'company-cmake-setup)
+
+(defun cedet-enable ()
+  "Start CEDET."
+  (interactive)
+  (remove-hook 'c++-mode-hook 'company-rtags-setup)
+  (remove-hook 'c-mode-hook 'company-rtags-setup)
+  (remove-hook 'c++-mode-hook 'flycheck-rtags-setup)
+  (remove-hook 'c-mode-hook 'flycheck-rtags-setup)
+  (semantic-enable)
+  (add-hook 'c++-mode-hook 'company-c-headers-setup)
+  (add-hook 'c-mode-hook 'company-c-headers-setup)
+  (add-hook 'c++-mode-hook 'company-semantic-setup)
+  (add-hook 'c-mode-hook 'company-semantic-setup)
+  )
+
+(defun irony-enable ()
+  "Start irony mode."
+  (interactive)
+  (semantic-disable)
+  (remove-hook 'c++-mode-hook 'company-c-headers-setup)
+  (remove-hook 'c-mode-hook 'company-c-headers-setup)
+  (remove-hook 'c++-mode-hook 'company-semantic-setup)
+  (remove-hook 'c-mode-hook 'company-semantic-setup)
+  (rtags-start-process-unless-running)
+  (add-hook 'c++-mode-hook 'company-rtags-setup)
+  (add-hook 'c-mode-hook 'company-rtags-setup)
+  (add-hook 'c++-mode-hook 'flycheck-rtags-setup)
+  (add-hook 'c-mode-hook 'flycheck-rtags-setup)
+  )
+#+END_SRC
+
+* Más información
+
+Para saber más sobre configuración de Emacs para c/c++
+https://www.seas.upenn.edu/~chaoliu/2017/09/01/c-cpp-programming-in-emacs/
+
+* Exportando
+
