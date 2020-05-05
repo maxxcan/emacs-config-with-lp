@@ -123,23 +123,17 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 
 #+name: initial-bootstrap
 #+begin_src emacs-lisp
-<<<<<<< HEAD
+
 ;;disable startup screen
+
 (setq inhibit-startup-screen t)
 
 ;; disable bar-mode and scroll-mode
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
-=======
-  ;; disable startup screen
-  (setq inhibit-startup-screen t)
 
-  ;; disable bar-mode and scroll-mode
-  (tool-bar-mode -1)
-  (toggle-scroll-bar -1)
->>>>>>> e7cd6e19e7d1d73afd2031b17e6a6ddd79c80871
 
-  ;; nice scrolling
+;; nice scrolling
   (setq scroll-margin 0
 	scroll-conservatively 100000
 	scroll-preserve-screen-position 1)
