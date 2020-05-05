@@ -123,12 +123,12 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 
 #+name: initial-bootstrap
 #+begin_src emacs-lisp
-;; disable startup screen
-;;(setq inhibit-startup-screen t)
+;;disable startup screen
+(setq inhibit-startup-screen t)
 
 ;; disable bar-mode and scroll-mode
-;;(tool-bar-mode -1)
-;;(toggle-scroll-bar -1)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
 
 ;; nice scrolling
 (setq scroll-margin 0
@@ -443,14 +443,14 @@ Además definimos el path que variará según tu versión de Emacs
 
 #+name: config-path
 #+BEGIN_SRC emacs-lisp
-~/.config/emacs/config
+~/.emacs.d/config
 #+END_SRC
 
 
 Además vamos a crear  el fichero load-directory que es el que carga todos los ficheros de configuración de ese directorio, también recordar que hay que crear el directorio primero.
 
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/load-directory :mkdirp yes
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/load-directory :mkdirp yes
 
 (defun load-directory (directory)
   "Load recursively all `.el' files in DIRECTORY."
@@ -479,19 +479,19 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 
 * Juntando todo el código
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/init :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init :noweb yes :padline no :results silent
 <<copyright>>
 <<user>>
 <<use-package>>
 <<initial-bootstrap>>
 <<recent-files>>
-;;<<theme>>
+<<theme>>
 <<autopair-company>>
 <<ivy>>
 <<org>>
 <<nlinum>>
 <<neotree>>
-;;<<dashboard>>
+<<dashboard>>
 <<projectile>>
 <<smex-whichkey>>
 <<rainbow>>

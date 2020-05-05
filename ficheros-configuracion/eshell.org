@@ -83,7 +83,7 @@ Si usamos Ivy podemos combinarlo de la siguiente forma:
 
 * Juntando el código
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/eshell.el :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/eshell.el :noweb yes :padline no :results silent
 <<principal>>
 <<sugerencias>>
 <<ivy-sugerencias>>

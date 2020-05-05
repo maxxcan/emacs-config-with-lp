@@ -1,0 +1,57 @@
+#+TITLE: bibliografia
+#+AUTHOR: Patricio Martínez
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción
+
+* El código 
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/bibliography.el :padline no :results silent
+(use-package org-ref
+  :after org
+  :init
+  (setq reftex-default-bibliography '("~/Documentos/Bibliografia/referencias.bib"))
+  (setq org-ref-bibliography-notes "~/Documentos/Bibliografia/notas/notas.org"
+        org-ref-default-bibliography '("~/Documentos/Bibliografia/referencias.bib")
+        org-ref-pdf-directory "~/Documentos/Bibliografia/papers/")
+
+  (setq helm-bibtex-bibliography "~/Documentos/Bibliografia/referencias.bib")
+  (setq helm-bibtex-library-path "~/Documentos/Bibliografia/papers/")
+
+  (setq helm-bibtex-pdf-open-function
+        (lambda (fpath)
+          (start-process "open" "*open*" "open" fpath)))
+
+  (setq helm-bibtex-notes-path "~/Documentos/Bibliografia/notas/notas.org")
+  :config
+  (key-chord-define-global "uu" 'org-ref-cite-hydra/body)
+  ;; variables that control bibtex key format for auto-generation
+  ;; I want firstauthor-year-title-words
+  ;; this usually makes a legitimate filename to store pdfs under.
+  (setq bibtex-autokey-year-length 4
+        bibtex-autokey-name-year-separator "-"
+        bibtex-autokey-year-title-separator "-"
+        bibtex-autokey-titleword-separator "-"
+        bibtex-autokey-titlewords 2
+        bibtex-autokey-titlewords-stretch 1
+        bibtex-autokey-titleword-length 5))
+
+(use-package doi-utils
+  :after org)
+
+(use-package org-ref-bibtex
+  :after org
+  :init
+  (setq org-ref-bibtex-hydra-key-binding "\C-cj"))
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
+
+(use-package org-pdfview
+  :ensure t)
+
+#+END_SRC
+
+* Exportando

@@ -69,7 +69,7 @@ Para terminar vamos a añadir un código para que la combinación de teclas Cont
 
 * Juntando todo el código 
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/better-ansiterm.el :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/better-ansiterm.el :noweb yes :padline no :results silent
 <<exit-buffer>>
 <<zsh-and-utf8>>
 <<paste>>

@@ -12,7 +12,7 @@ Nosotros por nuestro lado vamos a usar el paquete *centaur-tabs*. Para tener má
 
 Vamos a usar esta configuración compatible con *use-package*:
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/centaur-tabs.el :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/centaur-tabs.el :noweb yes :padline no :results silent
 (use-package centaur-tabs
   :ensure t
   :demand
