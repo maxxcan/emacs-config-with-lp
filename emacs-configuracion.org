@@ -480,6 +480,19 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 ;;;
 #+END_SRC
 
+** Añadiendo fichero por fichero 
+
+Con la configuración anterior añadimos por defecto toda la configuración que pongamos en el directorio definido en el último código y la única forma de que no cargue esa configuración es eliminando el fichero del directorio. 
+Otra forma para añadir mayor control es añadir el directorio al path e ir añadiendo fichero por fichero con la palabra clave *require*. Eso sí, para que esto funcione los ficheros de configuración .el tienen que terminar con la línea *(provide 'nombre-fichero)* y luego escribiremos ese *nombre-fichero* usando *require* de la forma *(require 'nombre-fichero)*. Así vamos añadir el path para poder añadir fichero por fichero. 
+
+#+name: añadir-path
+#+BEGIN_SRC emacs-lisp :noweb yes
+(add-to-list 'load-path "<<config-path>>")
+#+END_SRC
+
+Tenemos toda la información en el [[https://www.emacswiki.org/emacs/LoadingLispFiles][wiki de Emacs]].
+
+
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init :noweb yes :padline no :results silent
@@ -499,7 +512,8 @@ Además vamos a crear  el fichero load-directory que es el que carga todos los f
 <<smex-whichkey>>
 <<rainbow>>
 ;;<<eww>>
-<<load-directory>>
+;;<<load-directory>>
+<<añadir-path>>
 #+END_SRC
 
 * Exportando 
