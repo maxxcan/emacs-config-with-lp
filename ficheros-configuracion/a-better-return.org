@@ -8,7 +8,7 @@ Vamos a usar una función que ayuda a que cuando le demos a la teclar return en 
 
 * El código 
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/a-better-return.el :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/a-better-return.el :padline no :results silent
 ;;;
 (require 'org-inlinetask)
 (defun scimax/org-return (&optional ignore)

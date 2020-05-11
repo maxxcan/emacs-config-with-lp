@@ -8,7 +8,7 @@ Ibuffer es un programa que mejora el manejo de los buffers por parte de Emacs.
 
 Vamos a añadir un pequeño código con algunas mejoras donde principalmente haremos que los buffers se agrupen en ciertos grupos dependiendo de lo que contengan unas pequeñas mejoras más.
 
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.config/emacs/config/ibuffer.el :padline no :results silent 
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.emacs.d/config/ibuffer.el :padline no :results silent 
 (setq ibuffer-saved-filter-groups
       (quote (("default"
 	             ("dired" (mode . dired-mode))

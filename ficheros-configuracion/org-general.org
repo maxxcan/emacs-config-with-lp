@@ -106,7 +106,7 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
 
 * Juntando todo el código
 
-#+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.config/emacs/config/org-general.el :padline no :results silent 
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.emacs.d/config/org-general.el :padline no :results silent 
 <<agenda-y-notas>>
 <<tareas-y-colores>>
 ;;<<calendario>>
