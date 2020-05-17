@@ -1,0 +1,39 @@
+#+TITLE: mu4e-to-org
+#+AUTHOR: Maxxcan Fox
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción 
+
+Si estás usando mu4e como tu gestor de correo favorito y usas org como tu gestor GTD es muy interesante unir ambas cosas. 
+
+Por ejemplo, una forma interesante de hacerlo es poder seleccionar ciertos correos, y poder añadirlos como tareas dentro de tu GTD. 
+
+Para ello tenemos el siguiente código 
+
+* El código 
+
+#+name: mensajes-a-tareas
+#+BEGIN_SRC emacs-lisp
+;;store org-mode links to messages
+(require 'org-mu4e)
+;;store link to message if in header view, not to header query
+(setq org-mu4e-link-query-in-headers-mode nil)
+(setq org-capture-templates
+      '(("t" "por hacer" entry (file+headline "~/Documentos/GTD/GTD.org" "Tareas")
+         "* PORHACER [#A] %?\nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))\n%a\n\n\n")
+        ("a" "archivar" entry (file+headline "~/Documentos/GTD/archive.org" "Archivo"))))
+;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+#+END_SRC
+
+* Juntando el código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/mu4e-to-org.el :noweb yes :padline no :results silent
+<<mensajes-a-tareas>>
+#+END_SRC
+
+* Exportando el código
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
