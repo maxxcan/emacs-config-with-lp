@@ -1,0 +1,46 @@
+#+TITLE: dart-flutter
+#+AUTHOR: Maxxcan Fox
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción 
+
+* Código 
+
+#+NAME: lsp
+#+BEGIN_SRC emacs-lisp
+(use-package lsp-mode :ensure t)
+(use-package lsp-dart
+  :ensure t
+  :hook (dart-mode . lsp))
+#+END_SRC
+
+#+NAME: optional-packages
+#+BEGIN_SRC emacs-lisp
+; Optional packages
+(use-package projectile :ensure t) ;; project management
+(use-package yasnippet
+  :ensure t
+  :config (yas-global-mode)) ;; snipets
+(use-package lsp-ui :ensure t) ;; UI for LSP
+(use-package company :ensure t) ;; Auto-complete
+#+END_SRC
+
+#+NAME: optional-fluter-packages
+#+BEGIN_SRC emacs-lisp
+;; Optional Flutter packages
+(use-package hover :ensure t) ;; run app from desktop without emulator
+#+END_SRC
+
+* Juntando el código 
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/dart-flutter.el :noweb yes :padline no :results silent
+<<lsp>>
+<<optional-packages>>
+<<optional-fluter-packages>>
+#+END_SRC
+
+* Exportando 
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
