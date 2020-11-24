@@ -31,6 +31,56 @@
 (use-package hover :ensure t) ;; run app from desktop without emulator
 #+END_SRC
 
+#+NAME: Project-errors-on-modeline
+#+BEGIN_SRC emacs-lisp
+;; Project errors on modeline
+(with-eval-after-load 'lsp-mode
+;; :project/:workspace/:file
+(setq lsp-modeline-diagnostics-enable :project))
+#+END_SRC
+
+#+NAME: performance
+#+BEGIN_SRC emacs-lisp
+;; performance
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024));; 1mb
+
+(setq lsp-completion-provier :capf)
+(setq lsp-idle-delay 0.500)
+(setq lsp-enable-file-watcherss nil)
+(setq lsp-print-perfomance t)
+#+END_SRC
+
+#+NAME: dap-config
+#+BEGIN_SRC emacs-lisp
+;; dap config
+(require 'dap-chrome)
+(setq dap-chrome-debug-program '("/opt/google/chrome/chrome"))
+#+END_SRC
+
+#+NAME: flutter-mode 
+#+BEGIN_SRC emacs-lisp
+  ;; fluter mode 
+  (use-package flutter
+    :after dart-mode
+    :bind (:map dart-mode-map
+		("C-M-x" . #'flutter-run-or-hot-reload))
+    :custom
+    (flutter-sdk-path "/opt/flutter"))
+
+  ;; Optional
+  (use-package flutter-l10n-flycheck
+    :after flutter
+    :config
+    (flutter-l10n-flycheck-setup))
+#+END_SRC
+
+#+NAME: enable-disable-lsp-features
+#+BEGIN_SRC emacs-lisp
+;; enable/disable lsp-mode features https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
+
+#+END_SRC
+
 * Juntando el código 
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/dart-flutter.el :noweb yes :padline no :results silent
