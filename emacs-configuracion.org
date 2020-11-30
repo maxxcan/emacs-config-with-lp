@@ -512,7 +512,7 @@ Tenemos toda la información en el [[https://www.emacswiki.org/emacs/LoadingLisp
 <<smex-whichkey>>
 <<rainbow>>
 ;;<<eww>>
-;;<<load-directory>>
+<<load-directory>>
 <<añadir-path>>
 #+END_SRC
 
