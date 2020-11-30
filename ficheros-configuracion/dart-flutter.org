@@ -51,6 +51,23 @@
 (setq lsp-print-perfomance t)
 #+END_SRC
 
+#+NAME: flutter-mode
+#+BEGIN_SRC emacs-lisp
+;; Flutter mode 
+(use-package flutter
+:after dart-mode
+:bind (:map dart-mode-map
+("C-M-x" . #'flutter-run-or-hot-reload))
+:custom
+(flutter-sdk-path "/opt/flutter/"))
+
+;; Optional
+(use-package flutter-l10-flycheck
+:after flutter
+:config
+(flutter-l10-flycheck-setup))
+#+END_SRC
+
 #+NAME: dap-config
 #+BEGIN_SRC emacs-lisp
 ;; dap config
@@ -58,28 +75,9 @@
 (setq dap-chrome-debug-program '("/opt/google/chrome/chrome"))
 #+END_SRC
 
-#+NAME: flutter-mode 
-#+BEGIN_SRC emacs-lisp
-  ;; fluter mode 
-  (use-package flutter
-    :after dart-mode
-    :bind (:map dart-mode-map
-		("C-M-x" . #'flutter-run-or-hot-reload))
-    :custom
-    (flutter-sdk-path "/opt/flutter"))
 
-  ;; Optional
-  (use-package flutter-l10n-flycheck
-    :after flutter
-    :config
-    (flutter-l10n-flycheck-setup))
-#+END_SRC
+https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
 
-#+NAME: enable-disable-lsp-features
-#+BEGIN_SRC emacs-lisp
-;; enable/disable lsp-mode features https://emacs-lsp.github.io/lsp-mode/tutorials/how-to-turn-off/
-
-#+END_SRC
 
 * Juntando el código 
 
@@ -87,6 +85,10 @@
 <<lsp>>
 <<optional-packages>>
 <<optional-fluter-packages>>
+<<Project-errors-on-modeline>>
+<<performance>>
+<<flutter-mode>>
+<<dap-config>>
 #+END_SRC
 
 * Exportando 
