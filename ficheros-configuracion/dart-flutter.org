@@ -62,10 +62,10 @@
 (flutter-sdk-path "/opt/flutter/"))
 
 ;; Optional
-(use-package flutter-l10-flycheck
+(use-package flutter-l10n-flycheck
 :after flutter
 :config
-(flutter-l10-flycheck-setup))
+(flutter-l10n-flycheck-setup))
 #+END_SRC
 
 #+NAME: dap-config
