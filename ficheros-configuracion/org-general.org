@@ -1,4 +1,4 @@
-+title: Configuración de org-general
+#+title: Configuración de org-general
 #+AUTHOR: Maxxcan Fox
 #+EMAIL: maxxcan@disroot.org
 
@@ -70,7 +70,6 @@ Además vamos a hacerle unos ajustes de aspecto, como poner que empiece el calen
 #+name: calendario
 #+BEGIN_SRC emacs-lisp
 (use-package calfw-org
-:defer t
 :ensure  t
 :config 
 (setq cfw:org-overwrite-default-keybinding t)

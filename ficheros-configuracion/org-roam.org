@@ -1,0 +1,66 @@
+#+TITLE: org-roam
+#+AUTHOR: Patricio Martínez
+#+EMAIL: maxxcan@disroot.org
+#+DATE: <2020-07-14 mar>
+
+* Introducción
+
+* Código
+
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam 
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/Documentos/org-roam/")
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph-show))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
+
+
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(use-package org-roam 
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/Documentos/org-roam")
+      (org-roam-db-location "~/Documentos/org-roam/org-roam.db")
+      (org-roam-graph-viewer t)
+      (org-roam-capture-function 'org-roam-capture)
+      (org-roam-completion-system 'ivy)
+      (org-roam-mode t)
+      :bind (:map org-roam-mode-map
+		  (("C-c r b" . org-roam)
+		   ("C-c r c" . org-roam-capture)
+		   ("C-c r d" . org-roam-doctor)
+		   ("C-c r f" . org-roam-find-file)
+		   ("C-c r g" . org-roam-graph-show)
+		   ("C-n r i" . org-roam-insert)
+		   ("C-n r m" . org-roam-mode)
+		   ("C-n r r" . org-roam-find-ref)
+		   ("C-n r t" . org-roam-buffer-toggle-display))
+		  :map org-mode-map
+		  (("C-c n i" . org-roam-insert))
+		  (("C-c n I" . org-roam-insert-immediate))))
+
+#+END_SRC
+
+
+
+
+* Exportación
+
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.

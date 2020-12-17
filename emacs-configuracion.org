@@ -512,7 +512,11 @@ Tenemos toda la información en el [[https://www.emacswiki.org/emacs/LoadingLisp
 <<rainbow>>
 ;;<<eww>>
 <<load-directory>>
+<<<<<<< HEAD
 ;;<<añadir-path>>
+=======
+<<añadir-path>>
+>>>>>>> acf28f79e78164945d478e460daea651eb34b921
 #+END_SRC
 
 * Exportando 
