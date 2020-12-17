@@ -59,7 +59,7 @@ Además añadiremos otros maquetes básicos.
 
 * Juntando el código
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/sly.el :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/sly.el :noweb yes :padline no :results silent
 <<sly>>
 <<sly-plus>>
 #+END_SRC

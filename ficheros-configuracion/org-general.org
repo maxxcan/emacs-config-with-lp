@@ -104,13 +104,24 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
   (find-file "~/Documentos/GTD/notas.org"))
 #+END_SRC
 
+* Indentando código en los bloques org-bable 
+
+#+name: code-indent
+#+BEGIN_SRC emacs-lisp
+
+(setq org-src-tab-acts-natively t)
+
+#+END_SRC
+
+
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :noweb yes :tangle ~/.emacs.d/config/org-general.el :padline no :results silent 
 <<agenda-y-notas>>
 <<tareas-y-colores>>
-;;<<calendario>>
+<<calendario>>
 <<funciones-tareas>>
+<<code-indent>>
 #+END_SRC
 
 * Exportando

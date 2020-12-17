@@ -415,6 +415,7 @@ input {
 
 https://www.youtube.com/watch?v=xTVN8UDScqk
 
+#+NAME: emms
 #+BEGIN_SRC emacs-lisp
 (use-package emms
   :ensure t
@@ -464,9 +465,26 @@ https://www.youtube.com/watch?v=xTVN8UDScqk
   (message "MPD Database Updated!"))
 (global-set-key (kbd "s-m u") 'mpd/update-database)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(setq mpc-host "localhost:6601")
+
+(eval-after-load 'emms '(emms-state-mode))
+
 #+END_SRC
 
+* Usandolo en Emacs 
+
+Ahora ejecutamos el demonio mpd y escribimos Alt-x: mpc 
 
 * Juntando código
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/emms.el :noweb yes :padline no :results silent
+<<emms>>
+#+END_SRC
 
 * Exportando
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.

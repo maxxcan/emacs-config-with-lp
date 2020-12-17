@@ -4,7 +4,11 @@
 
 * Introducción
 
+* Instalar rtags en el sistema
+
 * Código
+
+
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/c-c++.el :noweb yes :padline no :results silent
 

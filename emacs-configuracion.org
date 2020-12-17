@@ -131,7 +131,7 @@ Para instalar de forma automática los paquetes que necesitemos usando use-packa
 ;; disable bar-mode and scroll-mode
 (tool-bar-mode -1)
 (toggle-scroll-bar -1)
-
+(menubar-mode -1)
 
 ;; nice scrolling
   (setq scroll-margin 0
@@ -492,7 +492,6 @@ Otra forma para añadir mayor control es añadir el directorio al path e ir aña
 
 Tenemos toda la información en el [[https://www.emacswiki.org/emacs/LoadingLispFiles][wiki de Emacs]].
 
-
 * Juntando todo el código
 
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init :noweb yes :padline no :results silent
@@ -512,8 +511,8 @@ Tenemos toda la información en el [[https://www.emacswiki.org/emacs/LoadingLisp
 <<smex-whichkey>>
 <<rainbow>>
 ;;<<eww>>
-;;<<load-directory>>
-<<añadir-path>>
+<<load-directory>>
+;;<<añadir-path>>
 #+END_SRC
 
 * Exportando 
