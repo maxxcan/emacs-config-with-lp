@@ -1,0 +1,30 @@
+#+TITLE: erc
+#+AUTHOR: Maxxcan Fox
+#+EMAIL: maxxcan@disroot.org
+
+* Introducción
+
+
+
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package erc-colorize
+:ensure t
+:config (erc-colorize-mode 1))
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(use-package ercn
+:ensure t
+:config 
+(setq ercn-notify-rules
+'((current-nick . all)
+(keyword . all)
+(pal . ("#emacs"))
+(query-buffer . all)))
+
+(defun do-notify (nickname message))
+(add-hook 'ercn-notify-hook 'do-notify))
+#+END_SRC
