@@ -87,20 +87,25 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
 
 #+name: funciones-tareas
 #+BEGIN_SRC emacs-lisp
-(defun gtd ()
-  "Entrada principal para el archivo gtd"
-  (interactive)
-  (find-file "~/Documentos/GTD/GTD.org"))
+  (defun gtd ()
+    "Entrada principal para el archivo gtd"
+    (interactive)
+    (find-file "~/Documentos/GTD/GTD.org"))
 
-(defun actividades ()
-  "Entrada para el archivo de actividades"
-  (interactive)
-  (find-file "~/Documentos/GTD/Actividades.org"))
+  (defun proyectos()
+    "Entrada principal para el archivo de los proyectos"
+    (interactive)
+    (find-file "~/Documentos/GTD/proyectos.org"))
 
-(defun notas ()
-  "Entraa para el archivo de notas"
-  (interactive)
-  (find-file "~/Documentos/GTD/notas.org"))
+  (defun actividades ()
+    "Entrada para el archivo de actividades"
+    (interactive)
+    (find-file "~/Documentos/GTD/Actividades.org"))
+
+  (defun notas ()
+    "Entraa para el archivo de notas"
+    (interactive)
+    (find-file "~/Documentos/GTD/notas.org"))
 #+END_SRC
 
 * Indentando código en los bloques org-bable 
@@ -111,7 +116,6 @@ Ahora vamos a crear unas funciones muy simples que simplemente nos van a ayudar 
 (setq org-src-tab-acts-natively t)
 
 #+END_SRC
-
 
 * Juntando todo el código
 
