@@ -6,8 +6,9 @@
 
 
 
+* El código 
 
-
+#+NAME: color
 #+BEGIN_SRC emacs-lisp
 (use-package erc-colorize
 :ensure t
@@ -15,6 +16,7 @@
 #+END_SRC
 
 
+#+NAME: notificaciones
 #+BEGIN_SRC emacs-lisp
 (use-package ercn
 :ensure t
@@ -28,3 +30,18 @@
 (defun do-notify (nickname message))
 (add-hook 'ercn-notify-hook 'do-notify))
 #+END_SRC
+
+* Juntando el código
+
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/erc.el :noweb yes :padline no :results silent
+<<color>>
+<<notificaciones>>
+#+END_SRC
+
+
+* Exportando
+
+Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
+
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.
+
