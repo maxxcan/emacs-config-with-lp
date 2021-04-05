@@ -15,7 +15,7 @@
       :hook
       (after-init . org-roam-mode)
       :custom
-      (org-roam-directory "~/Documentos/org-roam/")
+      (org-roam-directory "~/Documentos/org-database/org-roam/")
       :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
@@ -33,8 +33,8 @@
       :hook
       (after-init . org-roam-mode)
       :custom
-      (org-roam-directory "~/Documentos/org-roam")
-      (org-roam-db-location "~/Documentos/org-roam/org-roam.db")
+      (org-roam-directory "~/Documentos/org-database/org-roam")
+      (org-roam-db-location "~/Documentos/org-database/org-roam/org-roam.db")
       (org-roam-graph-viewer t)
       (org-roam-capture-function 'org-roam-capture)
       (org-roam-completion-system 'ivy)

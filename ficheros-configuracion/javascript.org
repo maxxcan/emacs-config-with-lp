@@ -8,62 +8,119 @@
 
 * Tern 
 
+#+name: tern  
+#+begin_src emacs-lisp  
+  (use-package tern-mode
+    :ensure t
+    :config
+    ;;(add-to-list 'load-path "/usr/bin/tern")
+    (add-to-list 'load-path "~/Trabajo/tern/bin/tern")
+    (autoload 'tern-mode "tern.el" nil t)
+    (add-hook 'js-mode-hook (lambda () (tern-mode t))))
+#+END_SRC
 
-(add-to-list 'load-path "/usr/bin/tern")
-(autoload 'tern-mode "tern.el" nil t)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+* Web mode
+  
+#+NAME: web-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+     (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+     (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode)))
+#+END_SRC
+
+* Js Comint
+
+  #+NAME: js-comint
+  #+BEGIN_SRC emacs-lisp
+    (use-package js-comint
+      :ensure t
+      :config 
+      (add-hook 'js2-mode-hook
+		(lambda ()
+		  (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
+		  (local-set-key (kbd "C-c b") 'js-send-buffer))))
+  #+END_SRC
+
+* Skewer mode
+
+#+name:skewer-mode  
+#+BEGIN_SRC emacs-lisp
+
+  (use-package skewer-mode
+    :ensure t
+    :config 
+    (add-hook 'js2-mode-hook 'skewer-mode)
+    (add-hook 'css-mode-hook 'skewer-css-mode)
+    (add-hook 'html-mode-hook 'skewer-html-mode))
+
+#+END_SRC
 
 
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
 
+* beatiful html, css y javascript/json
+** Web mode
 
-;; for js-comint
-(add-hook 'js2-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-x C-e") 'js-send-last-sexp)
-            (local-set-key (kbd "C-c b") 'js-send-buffer)))
+   #+NAME: web-beatify
+   #+BEGIN_SRC emacs-lisp
 
-;;for skewer-mode
+     (use-package web-beatify
+       :ensure t
+       :config
+       (eval-after-load 'js2-mode
+	 '(add-hook 'js2-mode-hook
+		    (lambda ()
+		      (add-hook 'before-save-hook 'web-beautify-js-buffer t t))))
 
-(add-hook 'js2-mode-hook 'skewer-mode)
-(add-hook 'css-mode-hook 'skewer-css-mode)
-(add-hook 'html-mode-hook 'skewer-html-mode)
+       (eval-after-load 'json-mode
+	 '(add-hook 'json-mode-hook
+		    (lambda ()
+		      (add-hook 'before-save-hook 'web-beautify-js-buffer t t))))
 
+       (eval-after-load 'sgml-mode
+	 '(add-hook 'html-mode-hook
+		    (lambda ()
+		      (add-hook 'before-save-hook 'web-beautify-html-buffer t t))))
 
-;; beatiful html, css and javascript/json
+       (eval-after-load 'css-mode
+	 '(add-hook 'css-mode-hook
+		    (lambda ()
+		      (add-hook 'before-save-hook 'web-beautify-css-buffer t t)))))
+    #+END_SRC
 
-;;web-beatifty
+** Ember mode
+   
 
- (eval-after-load 'js2-mode
-      '(add-hook 'js2-mode-hook
-                 (lambda ()
-                   (add-hook 'before-save-hook 'web-beautify-js-buffer t t))))
+   #+NAME: ember-mode
+   #+BEGIN_SRC emacs-lisp
 
-    (eval-after-load 'json-mode
-      '(add-hook 'json-mode-hook
-                 (lambda ()
-                   (add-hook 'before-save-hook 'web-beautify-js-buffer t t))))
+     (use-package ember-mode
+       :ensure t
+       :config
+       (add-hook 'js-mode-hook (lambda () (ember-mode t)))
+       (add-hook 'web-mode-hook (lambda () (ember-mode t))))
+   #+END_SRC
 
-    (eval-after-load 'sgml-mode
-      '(add-hook 'html-mode-hook
-                 (lambda ()
-                   (add-hook 'before-save-hook 'web-beautify-html-buffer t t))))
+* Juntando el código
 
-    (eval-after-load 'css-mode
-      '(add-hook 'css-mode-hook
-                 (lambda ()
-                   (add-hook 'before-save-hook 'web-beautify-css-buffer t t))))
+  #+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/javascript.el :noweb yes :padlie no :results silent
+    <<tern>>
+    <<web-mode>>
+    <<js-comint>>
+    <<skewer-mode>>
+    <<web-beatify>>
+    <<ember-mode>>
+#+END_SRC
 
+* Exportando
 
-;;; ember-mode
+<>  Tal como he indicado en la propia plantilla para exportar el código podemos usar la combinación de teclas C-c C-v t (C es control) o bien escribir en el minibuffer con Alt-x, org-babel-tangle
 
-(add-hook 'js-mode-hook (lambda () (ember-mode t)))
-(add-hook 'web-mode-hook (lambda () (ember-mode t)))
+Como vemos al final hay dos conjuntos de código que tienen la orden :tangle y nombre de archivo. Ese tangle significa que ese código se generará en un fichero que le hemos indicado.

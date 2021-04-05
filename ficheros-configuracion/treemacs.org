@@ -11,7 +11,7 @@
 
 La forma más rápida y fácil es usando por supuesto use-package
 
-#+BEGIN_SRC emacs-lisp :tangle ~/.config/emacs/config/treemacs.el :noweb yes :padline no :results silent
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/config/treemacs.el :noweb yes :padline no :results silent
 (use-package treemacs
   :ensure t
   :defer t
