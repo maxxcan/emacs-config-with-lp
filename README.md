@@ -1,2 +1,2 @@
 # emacs-config-with-lp
-this is my new org-config for Emacs
+Now my Emacs config is here: https://codeberg.org/maxxcan/emacs-config-with-lp
